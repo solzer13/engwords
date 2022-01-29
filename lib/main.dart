@@ -9,7 +9,6 @@ import 'package:engwords/settings/settings.dart';
 
 void main() 
 {
-    print('');
     BlocOverrides.runZoned(
         () => runApp(App()),
         blocObserver: SimpleBlocObserver(),
