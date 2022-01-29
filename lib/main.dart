@@ -18,7 +18,7 @@ class App extends StatelessWidget
 {
     App({Key? key}) : super(key: key);
 
-    final Repository repository = Repository();
+    late final Repository repository = Repository();
 
     @override
     Widget build(BuildContext context) 
