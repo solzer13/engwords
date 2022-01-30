@@ -23,20 +23,24 @@ class App extends StatelessWidget
     @override
     Widget build(BuildContext context) 
     {
+        var wordsBloc = WordsBloc(repository: repository)..add(const WordsStarted());
+        var settingsBloc = SettingsBloc(repository: repository)..add(const SettingsStarted());
+        var cardsBloc = CardsBloc(wordsBloc: wordsBloc, settingsBloc: settingsBloc)..add(const CardsStarted());
+
         return MultiBlocProvider(
             providers: 
             [
                 BlocProvider(
                     lazy: false,
-                    create: (_) => WordsBloc(repository: repository)..add(const WordsStarted()),
+                    create: (_) => wordsBloc,
                 ),
                 BlocProvider(
                     lazy: false,
-                    create: (_) => CardsBloc()..add(const CardsStarted()),
+                    create: (_) => cardsBloc,
                 ),
                 BlocProvider(
                     lazy: false,
-                    create: (_) => SettingsBloc(repository: repository)..add(const SettingsStarted()),
+                    create: (_) => settingsBloc,
                 ),
             ],
             child: const MaterialApp(

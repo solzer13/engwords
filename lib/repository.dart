@@ -15,7 +15,7 @@ class Repository {
 
     void _init() async
     {
-        var file = await _getFile();print('PATH: '+file.path);
+        var file = await _getFile();
 
         if(!file.existsSync())
         {

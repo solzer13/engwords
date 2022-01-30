@@ -13,8 +13,8 @@ class CardsLoading extends CardsState {
 }
 
 class CardsLoaded extends CardsState {
-    final List<Word> cards;
-    const CardsLoaded(this.cards);
+    final Card card;
+    const CardsLoaded(this.card);
 }
 
 class CardsError extends CardsState {

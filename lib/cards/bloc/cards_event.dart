@@ -9,3 +9,9 @@ class CardsStarted extends CardsEvent
 {
     const CardsStarted();
 }
+
+class CardsPressVariant extends CardsEvent
+{
+    final Word word;
+    const CardsPressVariant(this.word);
+}
