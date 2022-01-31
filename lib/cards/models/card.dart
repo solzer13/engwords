@@ -1,10 +1,32 @@
 
-import 'package:engwords/words/models/word.dart';
+
+import 'package:engwords/cards/cards.dart';
 
 class Card
 {
-    final Word word;
-    List<Word> variants;
+    final List<Word> learnWords;
+    final int counVarians;
 
-    Card({required this.word, required this.variants});
+    late Word word;
+    late List<Variant> variants;
+
+    Card({required this.learnWords, required this.counVarians})
+    {
+        word = (learnWords..shuffle()).first;
+
+        variants.add(Variant(word));
+
+        for (var learnWord in learnWords) 
+        { 
+            if(learnWord != word)
+            {
+                variants.add(Variant(word));
+                if(variants.length == counVarians) break;
+            }
+        }
+
+        variants.shuffle();
+    }
+
+    
 }
