@@ -18,5 +18,6 @@ class CardsLoaded extends CardsState {
 }
 
 class CardsError extends CardsState {
-    const CardsError();
+    final String message;
+    const CardsError(this.message);
 }

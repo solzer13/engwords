@@ -123,6 +123,6 @@ class SimpleBlocObserver extends BlocObserver {
   @override
   void onTransition(Bloc bloc, Transition transition) {
     super.onTransition(bloc, transition);
-    log('$transition');
+    //log('$transition');
   }
 }

@@ -20,27 +20,44 @@ class CardsBloc extends Bloc<CardsEvent, CardsState>
     {
         on<CardsStarted>(_onStarted);
         on<CardsPressVariant>(_onPressVariant);
+        on<CardsNextCard>(_onCardsNextCard);
+        on<CardsWordsLoaded>(_onCardsWordsLoaded);
+        on<CardsSettingsLoaded>(_onCardsSettingsLoaded);
+    }
+    
+    FutureOr<void> _onCardsWordsLoaded(CardsWordsLoaded event, Emitter<CardsState> emit) 
+    {
+        words = event.words;
+        _init(emit);
+    }
+
+    FutureOr<void> _onCardsSettingsLoaded(CardsSettingsLoaded event, Emitter<CardsState> emit) 
+    {
+        settings = event.settings;
+        _init(emit);
     }
     
     Future<void> _onStarted(CardsStarted event, Emitter<CardsState> emit) async
     {
         emit(const CardsLoading());
 
-        wordsBloc.stream.listen((state) async { 
-            if (state is WordsLoaded) 
-            {
-                words = state.words;
-                await _init(emit);
-            }
+        wordsBloc.stream.listen((state) { 
+            if(state is WordsLoaded) {
+                add(CardsWordsLoaded(state.words));
+            } 
         });
 
-        settingsBloc.stream.listen((state) async {
-            if (state is SettingsLoaded) 
-            {
-                settings = state.settings;
-                await _init(emit);
-            }
+        settingsBloc.stream.listen((state) { 
+            if (state is SettingsLoaded) {
+                add(CardsSettingsLoaded(state.settings));
+            } 
         });
+    }
+
+    FutureOr<void> _onCardsNextCard(CardsNextCard event, Emitter<CardsState> emit) 
+    {
+        card?.word.repeat++;
+        
     }
 
     FutureOr<void> _onPressVariant(CardsPressVariant event, Emitter<CardsState> emit) async
@@ -50,7 +67,7 @@ class CardsBloc extends Bloc<CardsEvent, CardsState>
         emit(CardsLoaded(card!));
     }
 
-    Future<List<Word>> _getLearnWords() async
+    List<Word> _getLearnWords()
     {
         List<Word> _learnWords = [];
 
@@ -71,22 +88,22 @@ class CardsBloc extends Bloc<CardsEvent, CardsState>
         return _learnWords;
     }
 
-    Future<void> _init(Emitter<CardsState> emit) async 
+    void _init(Emitter<CardsState> emit)  
     {
         if(words != null && settings != null)
         {
             try 
             {
                 card = Card(
-                    learnWords: await _getLearnWords(), 
+                    learnWords: _getLearnWords(), 
                     counVarians: settings!.counVarians.toInt(),
                 );
                 
                 emit(CardsLoaded(card!));
             } 
-            catch (_) 
+            catch (e) 
             {
-                emit(const CardsError());
+                emit(CardsError('Error:' + e.toString()));
             }
         }
     }

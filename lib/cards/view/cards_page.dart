@@ -13,6 +13,11 @@ class CardsWidget extends StatelessWidget
         if(variant.checked != null)
         {
             bgColor = variant.checked! ? MaterialStateProperty.all<Color>(Colors.green) :MaterialStateProperty.all<Color>(Colors.red) ;
+        
+            if(variant.checked!)
+            {
+                Future.delayed(const Duration(seconds: 1), (){context.read<CardsBloc>().add(const CardsNextCard());});
+            }
         }
 
         return TextButton(
@@ -49,6 +54,10 @@ class CardsWidget extends StatelessWidget
                 if (state is CardsLoading) 
                 {
                     return const Center(child: CircularProgressIndicator());
+                }
+                if (state is CardsError) 
+                {
+                    return Center(child: Text(state.message));
                 }
                 if (state is CardsLoaded) 
                 {

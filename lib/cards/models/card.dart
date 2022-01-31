@@ -7,8 +7,8 @@ class Card
     final List<Word> learnWords;
     final int counVarians;
 
-    late Word word;
-    late List<Variant> variants;
+    Word word = Word();
+    List<Variant> variants = [];
 
     Card({required this.learnWords, required this.counVarians})
     {
@@ -20,7 +20,7 @@ class Card
         { 
             if(learnWord != word)
             {
-                variants.add(Variant(word));
+                variants.add(Variant(learnWord));
                 if(variants.length == counVarians) break;
             }
         }
