@@ -1,9 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:engwords/words/words.dart';
 import 'package:engwords/cards/cards.dart';
-import 'package:engwords/settings/settings.dart';
 
 part 'cards_event.dart';
 part 'cards_state.dart';
@@ -16,9 +14,7 @@ class CardsBloc extends Bloc<CardsEvent, CardsState>
     List<Word>? words;
     Settings? settings;
 
-    List<Word>? learnWords;
-    Word? learnWord;
-    List<Word>? variants;
+    Card? card;
 
     CardsBloc({required this.wordsBloc, required this.settingsBloc}) : super(const CardsInitial())
     {
@@ -64,37 +60,12 @@ class CardsBloc extends Bloc<CardsEvent, CardsState>
                 if(!word.lerned)
                 {
                     _learnWords.add(word);
-                    if(_learnWords.length == _countWordsLern)
-                    {
-                        break;
-                    }
+                    if(_learnWords.length == _countWordsLern) break;
                 }
             }
         }
 
         return _learnWords;
-    }
-
-    Future<List<Word>> _getVariants(Word _learnWord, List<Word> _words) async
-    {
-        List<Word> _variants = [];
-
-        _variants.add(_learnWord);
-
-        for (var word in _words) 
-        { 
-            if(word != _learnWord)
-            {
-                _variants.add(word);
-                if(_variants.length == settings!.counVarians)
-                {
-                    break;
-                }
-            }
-        
-        }
-
-        return _variants..shuffle();
     }
 
     void _init() async 
@@ -103,13 +74,12 @@ class CardsBloc extends Bloc<CardsEvent, CardsState>
         {
             try 
             {
-                learnWords = await _getLearnWords();
-                learnWord = (learnWords!..shuffle()).first;
-                variants = await _getVariants(learnWord!, learnWords!);
-
-                var card = Card(word: learnWord!, variants: variants!);
-
-                emit(CardsLoaded(card));
+                card = Card(
+                    learnWords: await _getLearnWords(), 
+                    counVarians: settings!.counVarians.toInt(),
+                );
+                
+                emit(CardsLoaded(card!));
             } 
             catch (_) 
             {
@@ -119,30 +89,3 @@ class CardsBloc extends Bloc<CardsEvent, CardsState>
     }
 
 }
-
-
-// class Cards
-// {
-//     List<Word> _learnWords = [];
-//     List<Word> get learnWords 
-//     {
-//         if(_learnWords.isEmpty || _learnWords.length < _settings.countWordsLern.toInt())
-//         {
-//             for (var word in _wordRepository.words) 
-//             { 
-//                 if(!word.lerned)
-//                 {
-//                     _learnWords.add(word);
-//                     if(_learnWords.length == _settings.countWordsLern.toInt())
-//                     {
-//                         break;
-//                     }
-//                 }
-//             }
-//         }
-
-//         print(_learnWords.length);
-
-//         return _learnWords;
-//     }
-// }
