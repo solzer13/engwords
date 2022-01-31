@@ -13,8 +13,9 @@ class WordsLoading extends WordsState {
 }
 
 class WordsLoaded extends WordsState {
+    final Settings settings;
     final List<Word> words;
-    const WordsLoaded(this.words);
+    const WordsLoaded(this.words, this.settings);
 }
 
 class WordsError extends WordsState {

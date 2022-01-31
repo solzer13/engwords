@@ -19,11 +19,11 @@ class WordsWidget extends StatelessWidget
                 if (state is WordsLoaded) 
                 {
                     return Scaffold(
-                        body: WordsListWidget(
+                        body: ListWordsWidget(
                             bloc: context.read<WordsBloc>(),
+                            settings: state.settings,
                             words: state.words,
                         ),
-                        
                         floatingActionButton: FloatingActionButton(
                             onPressed: () {
                                 showDialog<void>(
@@ -44,6 +44,38 @@ class WordsWidget extends StatelessWidget
         );
     }
 
+}
+
+
+class ListWordsWidget extends StatelessWidget
+{
+    final Bloc bloc;
+    final Settings settings;
+    final List<Word> words;
+
+    const ListWordsWidget({Key? key, required this.bloc, required this.settings, required this.words}) : super(key: key);
+
+    @override
+    Widget build(BuildContext context) 
+    {
+        return ListView.builder(
+            padding: const EdgeInsets.all(8),
+            itemCount: words.length,
+            itemBuilder: (BuildContext context, int index) {
+                return ListTile(
+                    title: Text(words[index].eng),
+                    subtitle: Text(words[index].rus),
+                    visualDensity: VisualDensity.compact,
+                    leading: Text(words[index].repeat.toString() + '/' + settings.countRepeatWord.round().toString()),
+                    trailing: IconButton(
+                        icon: const Icon(Icons.delete),
+                        iconSize: 24.0,
+                        onPressed: () { bloc.add(WordsDeleteItem(words[index])); },
+                    ),
+                );
+            }
+        );
+    }
 }
 
 class WordsAddDialogWidget extends StatelessWidget
@@ -100,35 +132,6 @@ class WordsAddDialogWidget extends StatelessWidget
                 ],
                 ),
             ],
-        );
-    }
-}
-
-class WordsListWidget extends StatelessWidget
-{
-    final Bloc bloc;
-    final List<Word> words;
-
-    const WordsListWidget({Key? key, required this.bloc, required this.words}) : super(key: key);
-
-    @override
-    Widget build(BuildContext context) 
-    {
-        return ListView.builder(
-            padding: const EdgeInsets.all(8),
-            itemCount: words.length,
-            itemBuilder: (BuildContext context, int index) {
-                return ListTile(
-                    title: Text(words[index].eng),
-                    subtitle: Text(words[index].rus),
-                    visualDensity: VisualDensity.compact,
-                    trailing: IconButton(
-                        icon: const Icon(Icons.delete),
-                        iconSize: 24.0,
-                        onPressed: () { bloc.add(WordsDeleteItem(words[index])); },
-                    ),
-                );
-            }
         );
     }
 }

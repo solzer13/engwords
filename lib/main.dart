@@ -23,8 +23,8 @@ class App extends StatelessWidget
     @override
     Widget build(BuildContext context) 
     {
-        var wordsBloc = WordsBloc(repository: repository)..add(const WordsStarted());
         var settingsBloc = SettingsBloc(repository: repository)..add(const SettingsStarted());
+        var wordsBloc = WordsBloc(repository: repository, settingsBloc: settingsBloc)..add(const WordsStarted());
         var cardsBloc = CardsBloc(wordsBloc: wordsBloc, settingsBloc: settingsBloc)..add(const CardsStarted());
 
         return MultiBlocProvider(
@@ -63,7 +63,7 @@ class _MainWidgetState extends State<MainWidget>
 
     static Map<String, Widget> pages = 
     {
-        'Words'    : const WordsWidget(),
+        'Words'    : WordsWidget(),
         'Cards'    : const CardsWidget(),
         'Settings' : const SettingsWidget(),
     };
