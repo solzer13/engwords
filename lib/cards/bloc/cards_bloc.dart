@@ -22,29 +22,32 @@ class CardsBloc extends Bloc<CardsEvent, CardsState>
         on<CardsPressVariant>(_onPressVariant);
     }
     
-    void _onStarted(CardsStarted event, Emitter<CardsState> emit) async 
+    Future<void> _onStarted(CardsStarted event, Emitter<CardsState> emit) async
     {
         emit(const CardsLoading());
 
-        wordsBloc.stream.listen((state) { 
+        wordsBloc.stream.listen((state) async { 
             if (state is WordsLoaded) 
             {
                 words = state.words;
-                _init();
+                await _init(emit);
             }
         });
 
-        settingsBloc.stream.listen((state) {
+        settingsBloc.stream.listen((state) async {
             if (state is SettingsLoaded) 
             {
                 settings = state.settings;
-                _init();
+                await _init(emit);
             }
         });
     }
 
-    FutureOr<void> _onPressVariant(CardsPressVariant event, Emitter<CardsState> emit) 
+    FutureOr<void> _onPressVariant(CardsPressVariant event, Emitter<CardsState> emit) async
     {
+        card!.checkVariant(event.variant);
+        
+        emit(CardsLoaded(card!));
     }
 
     Future<List<Word>> _getLearnWords() async
@@ -68,7 +71,7 @@ class CardsBloc extends Bloc<CardsEvent, CardsState>
         return _learnWords;
     }
 
-    void _init() async 
+    Future<void> _init(Emitter<CardsState> emit) async 
     {
         if(words != null && settings != null)
         {

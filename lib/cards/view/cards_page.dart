@@ -1,6 +1,4 @@
 import 'package:engwords/cards/cards.dart';
-import 'package:engwords/settings/settings.dart';
-import 'package:engwords/words/words.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -8,66 +6,37 @@ class CardsWidget extends StatelessWidget
 {
   const CardsWidget({Key? key}) : super(key: key);
  
-    Widget _button()
+    Widget buttonVariant(BuildContext context, Variant variant)
     {
-        return Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(10),
-            margin: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-                color: Colors.grey,
-                border: Border.all(color: Colors.grey.shade900)
+        var bgColor = MaterialStateProperty.all<Color>(Colors.grey);
+
+        if(variant.checked != null)
+        {
+            bgColor = variant.checked! ? MaterialStateProperty.all<Color>(Colors.green) :MaterialStateProperty.all<Color>(Colors.red) ;
+        }
+
+        return TextButton(
+            style: ButtonStyle(
+                backgroundColor: bgColor,
             ),
-            child: Text('test', 
+            onPressed: () { context.read<CardsBloc>().add(CardsPressVariant(variant)); },
+            child: Text(variant.rus, 
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     fontSize: 20,
                     color: Colors.grey.shade900
                 ),
-            ),
+            )
         );
     }
 
-    Widget _buttonSuccess()
-    {
-        return Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(10),
-            margin: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-                color: Colors.green,
-                border: Border.all(color: Colors.grey.shade900)
-            ),
-            child: Text('test', 
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    fontSize: 20,
-                    color: Colors.grey.shade900
-                ),
-            ),
-        );
-    }
-
-    Widget _listWords(List<Word> _words)
+    Widget _listWords(List<Variant> variants)
     {
         return ListView.builder(
             padding: const EdgeInsets.all(8),
-            itemCount: _words.length,
+            itemCount: variants.length,
             itemBuilder: (BuildContext context, int index) {
-                return TextButton(
-                    style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all<Color>(Colors.grey),
-                    ),
-                    onPressed: () { context.read<CardsBloc>().add(CardsPressVariant(_words[index])); },
-                    child: Text(_words[index].rus, 
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontSize: 20,
-                            color: Colors.grey.shade900
-                        ),
-                    )
-                        
-                );
+                return buttonVariant(context, variants[index]);
             }
         );
     }

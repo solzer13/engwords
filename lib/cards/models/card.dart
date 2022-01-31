@@ -28,5 +28,8 @@ class Card
         variants.shuffle();
     }
 
-    
+    void checkVariant(Variant variant)
+    {
+        variant.checked = variant.eng == word.eng;
+    }
 }

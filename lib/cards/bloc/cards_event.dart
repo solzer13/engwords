@@ -12,6 +12,6 @@ class CardsStarted extends CardsEvent
 
 class CardsPressVariant extends CardsEvent
 {
-    final Word word;
-    const CardsPressVariant(this.word);
+    final Variant variant;
+    const CardsPressVariant(this.variant);
 }
