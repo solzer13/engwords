@@ -31,6 +31,8 @@ class WordsBloc extends Bloc<WordsEvent, WordsState> {
 
         try 
         {
+            words.clear();
+            
             List<dynamic> wordsMap = await repository.getWords();
 
             for (var wordMap in wordsMap) {
@@ -72,7 +74,10 @@ class WordsBloc extends Bloc<WordsEvent, WordsState> {
 
     FutureOr<void> _onEditItem(WordsEditItem event, Emitter<WordsState> emit) 
     {
-        //words.firstWhere((element) => false)
+        //var wordItem = words.firstWhere((word) => word.id == event.word.id);
+        //wordItem = event.word;
+        
+        repository.setWords(toMap());
     }
 
     void _onDeleteItem(WordsDeleteItem event, Emitter<WordsState> emit) async 

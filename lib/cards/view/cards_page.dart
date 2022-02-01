@@ -1,12 +1,13 @@
-import 'package:engwords/cards/cards.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:engwords/cards/cards.dart' as cards;
 
 class CardsWidget extends StatelessWidget
 {
   const CardsWidget({Key? key}) : super(key: key);
  
-    Widget buttonVariant(BuildContext context, Variant variant)
+    Widget buttonVariant(BuildContext context, cards.Card card, cards.Variant variant)
     {
         var bgColor = MaterialStateProperty.all<Color>(Colors.grey);
 
@@ -16,7 +17,7 @@ class CardsWidget extends StatelessWidget
         
             if(variant.checked!)
             {
-                Future.delayed(const Duration(seconds: 1), (){context.read<CardsBloc>().add(const CardsNextCard());});
+                Future.delayed(const Duration(seconds: 1), (){context.read<cards.CardsBloc>().add(cards.CardsNextCard(card));});
             }
         }
 
@@ -24,7 +25,7 @@ class CardsWidget extends StatelessWidget
             style: ButtonStyle(
                 backgroundColor: bgColor,
             ),
-            onPressed: () { context.read<CardsBloc>().add(CardsPressVariant(variant)); },
+            onPressed: () { context.read<cards.CardsBloc>().add(cards.CardsPressVariant(variant)); },
             child: Text(variant.rus, 
                 textAlign: TextAlign.center,
                 style: TextStyle(
@@ -35,13 +36,13 @@ class CardsWidget extends StatelessWidget
         );
     }
 
-    Widget _listWords(List<Variant> variants)
+    Widget _listWords(cards.Card card)
     {
         return ListView.builder(
             padding: const EdgeInsets.all(8),
-            itemCount: variants.length,
+            itemCount: card.variants.length,
             itemBuilder: (BuildContext context, int index) {
-                return buttonVariant(context, variants[index]);
+                return buttonVariant(context, card, card.variants[index]);
             }
         );
     }
@@ -49,17 +50,17 @@ class CardsWidget extends StatelessWidget
     @override
     Widget build(BuildContext context) 
     {
-        return BlocBuilder<CardsBloc, CardsState>(
+        return BlocBuilder<cards.CardsBloc, cards.CardsState>(
             builder: (context, state) {
-                if (state is CardsLoading) 
+                if (state is cards.CardsLoading) 
                 {
                     return const Center(child: CircularProgressIndicator());
                 }
-                if (state is CardsError) 
+                if (state is cards.CardsError) 
                 {
                     return Center(child: Text(state.message));
                 }
-                if (state is CardsLoaded) 
+                if (state is cards.CardsLoaded) 
                 {
                     return 
                     Column(
@@ -67,7 +68,7 @@ class CardsWidget extends StatelessWidget
                             Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
-                                    Text(state.card.word.repeat.toString() + ' / ' + context.read<SettingsBloc>().settings.countRepeatWord.round().toString(),
+                                    Text(state.card.word.repeat.toString() + ' / ' + state.settings.countRepeatWord.round().toString(),
                                         style: TextStyle(
                                             fontSize: 20,
                                             color: Colors.grey.shade900
@@ -90,7 +91,7 @@ class CardsWidget extends StatelessWidget
                                 ),
                             ),
                             Expanded(
-                                child: _listWords(state.card.variants),
+                                child: _listWords(state.card),
                             ),
                             
                         ],

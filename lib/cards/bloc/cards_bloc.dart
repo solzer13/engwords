@@ -16,6 +16,11 @@ class CardsBloc extends Bloc<CardsEvent, CardsState>
 
     Card? card;
 
+    get _loadedState
+    {
+        return CardsLoaded(settings!, card!);
+    }
+
     CardsBloc({required this.wordsBloc, required this.settingsBloc}) : super(const CardsInitial())
     {
         on<CardsStarted>(_onStarted);
@@ -56,15 +61,22 @@ class CardsBloc extends Bloc<CardsEvent, CardsState>
 
     FutureOr<void> _onCardsNextCard(CardsNextCard event, Emitter<CardsState> emit) 
     {
-        card?.word.repeat++;
+        card!.word.repeat++;
+        wordsBloc.add(WordsEditItem(card!.word));
         
+        card = Card(
+            learnWords: card!.learnWords, 
+            counVarians: settings!.counVarians.toInt(),
+        );
+
+        emit(_loadedState);
     }
 
     FutureOr<void> _onPressVariant(CardsPressVariant event, Emitter<CardsState> emit) async
     {
         card!.checkVariant(event.variant);
         
-        emit(CardsLoaded(card!));
+        emit(_loadedState);
     }
 
     List<Word> _getLearnWords()
@@ -77,7 +89,7 @@ class CardsBloc extends Bloc<CardsEvent, CardsState>
         {
             for (var word in words!) 
             { 
-                if(!word.lerned)
+                if(!word.learned)
                 {
                     _learnWords.add(word);
                     if(_learnWords.length == _countWordsLern) break;
@@ -99,7 +111,7 @@ class CardsBloc extends Bloc<CardsEvent, CardsState>
                     counVarians: settings!.counVarians.toInt(),
                 );
                 
-                emit(CardsLoaded(card!));
+                emit(_loadedState);
             } 
             catch (e) 
             {

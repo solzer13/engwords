@@ -12,7 +12,8 @@ class CardsStarted extends CardsEvent
 
 class CardsNextCard extends CardsEvent
 {
-    const CardsNextCard();
+    final Card oldCard;
+    const CardsNextCard(this.oldCard);
 }
 
 class CardsPressVariant extends CardsEvent

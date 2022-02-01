@@ -13,8 +13,9 @@ class CardsLoading extends CardsState {
 }
 
 class CardsLoaded extends CardsState {
+    final Settings settings;
     final Card card;
-    const CardsLoaded(this.card);
+    const CardsLoaded(this.settings, this.card);
 }
 
 class CardsError extends CardsState {

@@ -7,7 +7,7 @@ class Word
     String id = '';
     String eng = '';
     String rus = '';
-    bool lerned = false;
+    bool learned = false;
     int repeat = 0;
 
     Word()
@@ -20,7 +20,7 @@ class Word
         id = map['id'] ?? _genUID();
         eng = map['eng'] ?? 'No eng';
         rus = map['rus'] ?? 'No rus';
-        lerned = map['lerned'] ?? false;
+        learned = map['learned'] ?? false;
         repeat = map['repeat'] ?? 0;
     }
 
@@ -54,7 +54,7 @@ class Word
             "id":id,
             "eng":eng,
             "rus":rus,
-            "lerned":false,
+            "learned":false,
             "repeat":repeat
         };
     }
