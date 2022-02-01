@@ -3,6 +3,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:engwords/repository.dart';
+import 'package:engwords/settings/settings.dart';
 import 'package:engwords/words/words.dart';
 
 part 'words_event.dart';
