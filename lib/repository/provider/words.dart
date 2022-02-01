@@ -1,6 +1,11 @@
 
 import 'dart:convert';
 
+class Words
+{
+    
+}
+
 class Word
 {
     String id = '';
@@ -38,3 +43,4 @@ class Word
         });
     }
 }
+

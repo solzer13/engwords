@@ -1,6 +1,8 @@
 
 import 'dart:convert';
 
+import 'package:path_provider/path_provider.dart';
+
 class Settings
 {
     /// Колличество слов для изучения
@@ -11,6 +13,13 @@ class Settings
 
     /// Колличество повторений для слова
     double countRepeatWord = 5;
+
+    static const _fileName = "words.txt";
+
+    Settings()
+    {
+
+    }
 
     Settings.fromJson(String json)
     {
@@ -28,6 +37,11 @@ class Settings
         }
     }
 
+    Future<String> _getPath() async
+    {
+        return (await getApplicationDocumentsDirectory()).path + "/" + _fileName;
+    }
+    
     String toJson()
     {
         return jsonEncode({
