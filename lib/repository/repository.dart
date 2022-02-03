@@ -1,3 +1,5 @@
 
-export 'provider/settings.dart';
-export 'provider/words.dart';
+export 'settings/repository_settings_bloc.dart';
+export 'words/repository_words_bloc.dart';
+//export 'models/settings.dart';
+export 'models/word.dart';

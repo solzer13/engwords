@@ -1,4 +1,6 @@
 import 'dart:developer';
+import 'package:engwords/repository/providers/file_data_provider.dart';
+import 'package:engwords/repository/repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:engwords/repository.dart';
@@ -14,11 +16,12 @@ void main()
         blocObserver: SimpleBlocObserver(),
     );
 }
+
 class App extends StatelessWidget 
 {
     App({Key? key}) : super(key: key);
 
-    late final Repository repository = Repository();
+    late final RepositorySettingsBloc settings = RepositorySettingsBloc(FileDataProvider("settings.txt"));
 
     @override
     Widget build(BuildContext context) 
