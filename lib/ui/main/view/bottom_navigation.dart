@@ -3,7 +3,7 @@ part of 'main_page.dart';
 
 class MainBottomNawigationWidget extends StatelessWidget
 {
-    //MainWidget({Key? key}) : super(key: key);
+    MainBottomNawigationWidget({Key? key}) : super(key: key);
 
     @override
     Widget build(BuildContext context) 
