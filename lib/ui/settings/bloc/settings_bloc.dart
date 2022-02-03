@@ -1,6 +1,4 @@
 import 'package:bloc/bloc.dart';
-import 'package:engwords/repository.dart';
-import 'package:engwords/settings/settings.dart';
 
 part 'settings_event.dart';
 part 'settings_state.dart';

@@ -11,20 +11,20 @@ class RepositorySettingsBloc extends Bloc<RepositorySettingsEvent, RepositorySet
     Map<String, dynamic> _data = {};
 
     /// Колличество слов для изучения
-    set countWordsLern(value) => add(RepositorySettingsUpdate(key: "countWordsLern", value: value));
-    get countWordsLern {
-        return _data["countWordsLern"] ?? 10;
+    set countWordsLearn(int value) => add(RepositorySettingsUpdate(key: "countWordsLearn", value: value));
+    int get countWordsLearn {
+        return _data["countWordsLearn"] ?? 10;
     } 
 
     /// Колличество вариантов на странице
-    set counVarians(value) => add(RepositorySettingsUpdate(key: "counVarians", value: value));
-    get counVarians { 
-        return _data["counVarians"] ??  5;
+    set counVariants(int value) => add(RepositorySettingsUpdate(key: "counVariants", value: value));
+    int get counVariants { 
+        return _data["counVariants"] ??  5;
     }
 
     /// Колличество повторений для слова
-    set countRepeatWord(value) => add(RepositorySettingsUpdate(key: "countRepeatWord", value: value));
-    get countRepeatWord {
+    set countRepeatWord(int value) => add(RepositorySettingsUpdate(key: "countRepeatWord", value: value));
+    int get countRepeatWord {
         return _data["countRepeatWord"] ??  5;
     }
 

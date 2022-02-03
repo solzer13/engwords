@@ -33,6 +33,14 @@ class FileDataProvider extends DataProvider
 
     Future<File> _getFile() async
     {
+        var file = File(await _getPath());
+
+        if(!file.existsSync())
+        {
+            file.createSync(recursive: true);
+            file.writeAsStringSync("{}");
+        }
+
         return File(await _getPath());
     }
     
