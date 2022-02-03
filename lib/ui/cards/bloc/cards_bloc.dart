@@ -1,19 +1,16 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:engwords/cards/cards.dart';
+import 'package:engwords/repository/repository.dart';
 
 part 'cards_event.dart';
 part 'cards_state.dart';
 
 class CardsBloc extends Bloc<CardsEvent, CardsState> 
 {
-    WordsBloc wordsBloc;
-    SettingsBloc settingsBloc;
-
-    List<Word>? words;
-    Settings? settings;
-
+    RepositorySettingsBloc settings;
+    RepositoryWordsBloc words;
+    
     Card? card;
 
     get _loadedState
@@ -21,7 +18,7 @@ class CardsBloc extends Bloc<CardsEvent, CardsState>
         return CardsLoaded(settings!, card!);
     }
 
-    CardsBloc({required this.wordsBloc, required this.settingsBloc}) : super(const CardsInitial())
+    CardsBloc({required this.settings, required this.words}) : super(const CardsInitial())
     {
         on<CardsStarted>(_onStarted);
         on<CardsPressVariant>(_onPressVariant);

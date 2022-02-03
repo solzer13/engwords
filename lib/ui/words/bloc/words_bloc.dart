@@ -1,24 +1,18 @@
 
 import 'dart:async';
-
 import 'package:bloc/bloc.dart';
-import 'package:engwords/repository.dart';
-import 'package:engwords/settings/settings.dart';
-import 'package:engwords/words/words.dart';
+import 'package:engwords/repository/repository.dart';
+import 'package:engwords/ui/settings/bloc/settings_bloc.dart';
 
 part 'words_event.dart';
 part 'words_state.dart';
 
 class WordsBloc extends Bloc<WordsEvent, WordsState> {
 
-    final Repository repository;
-    final SettingsBloc settingsBloc;
-
-    final List<Word> words = [];
-
-    Settings? settings;
+    RepositorySettingsBloc settings;
+    RepositoryWordsBloc words;
     
-    WordsBloc({required this.repository, required this.settingsBloc}) : super(const WordsInitial()) {
+    WordsBloc({required this.settings, required this.words}) : super(const WordsInitial()) {
         on<WordsStarted>(_onStarted);
         on<WordsSettingsLoaded>(_onSettingsLoaded);
         on<WordsAddItem>(_onAddItem);

@@ -5,17 +5,17 @@ abstract class RepositoryWordsState
     
 }
 
-class RepositoryInitial extends RepositoryWordsState 
+class RepositoryWordsInitial extends RepositoryWordsState 
 {
 
 }
 
-class RepositoryLoading extends RepositoryWordsState 
+class RepositoryWordsLoading extends RepositoryWordsState 
 {
 
 }
 
-class RepositoryLoaded extends RepositoryWordsState 
+class RepositoryWordsLoaded extends RepositoryWordsState 
 {
 
 }
