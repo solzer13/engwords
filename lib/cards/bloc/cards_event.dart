@@ -1,13 +1,13 @@
 part of 'cards_bloc.dart';
 
-abstract class CardsEvent 
-{
+abstract class CardsEvent {
     const CardsEvent();
 }
 
-class CardsStarted extends CardsEvent
-{
-    const CardsStarted();
+class CardsStarted extends CardsEvent{
+    final SettingsBloc settings;
+    final WordsBloc words;
+    const CardsStarted(this.settings, this.words);
 }
 
 class CardsNextCard extends CardsEvent

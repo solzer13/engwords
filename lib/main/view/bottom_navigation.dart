@@ -3,7 +3,7 @@ part of 'main_page.dart';
 
 class MainBottomNawigationWidget extends StatelessWidget
 {
-    MainBottomNawigationWidget({Key? key}) : super(key: key);
+    const MainBottomNawigationWidget({Key? key}) : super(key: key);
 
     @override
     Widget build(BuildContext context) 
@@ -24,14 +24,9 @@ class MainBottomNawigationWidget extends StatelessWidget
                     label: 'Settings',
                 ),
             ],
-            currentIndex: _selectedIndex,
+            currentIndex: 0,
             selectedItemColor: Colors.blue,
-            onTap: (int index) 
-            {
-                setState(() {
-                    _selectedIndex = index;
-                });
-            }
+            onTap: (int index) {}
         );
     }
 }

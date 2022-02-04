@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:engwords/repository/providers/data_provider.dart';
+import 'package:engwords/data_provider.dart';
 
 part 'repository_words_event.dart';
 part 'repository_words_state.dart';

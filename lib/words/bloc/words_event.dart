@@ -6,7 +6,8 @@ abstract class WordsEvent {
 
 class WordsStarted extends WordsEvent
 {
-    const WordsStarted();
+    final SettingsBloc settings;
+    const WordsStarted(this.settings);
 }
 
 class WordsDeleteItem extends WordsEvent
@@ -25,10 +26,4 @@ class WordsAddItem extends WordsEvent
 {
     final Word word;
     const WordsAddItem(this.word);
-}
-
-class WordsSettingsLoaded extends WordsEvent
-{
-    final Settings settings;
-    const WordsSettingsLoaded(this.settings);
 }

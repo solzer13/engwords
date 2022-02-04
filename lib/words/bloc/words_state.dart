@@ -13,9 +13,9 @@ class WordsLoading extends WordsState {
 }
 
 class WordsLoaded extends WordsState {
-    final Settings settings;
-    final List<Word> words;
-    const WordsLoaded(this.words, this.settings);
+    final SettingsBloc settings;
+    final WordsBloc words;
+    const WordsLoaded({required this.settings, required this.words});
 }
 
 class WordsError extends WordsState {

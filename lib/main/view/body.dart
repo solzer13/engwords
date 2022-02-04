@@ -8,8 +8,8 @@ class MainBodyWidget extends StatelessWidget
     @override
     Widget build(BuildContext context) 
     {
-        return Center(
-            child: WordsWidget()
+        return const Center(
+            child: Text(""),
         );
         
     }

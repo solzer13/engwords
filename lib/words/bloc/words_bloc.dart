@@ -1,63 +1,54 @@
 
 import 'dart:async';
 import 'package:bloc/bloc.dart';
-import 'package:engwords/repository/repository.dart';
-import 'package:engwords/ui/settings/bloc/settings_bloc.dart';
+import 'package:engwords/data_provider.dart';
+import 'package:engwords/words/words.dart';
+import 'package:engwords/settings/settings.dart';
 
 part 'words_event.dart';
 part 'words_state.dart';
 
 class WordsBloc extends Bloc<WordsEvent, WordsState> {
 
-    RepositorySettingsBloc settings;
-    RepositoryWordsBloc words;
-    
-    WordsBloc({required this.settings, required this.words}) : super(const WordsInitial()) {
+    final DataProvider _provider;
+    Map<String, dynamic> _data = {};
+    final List<Word> _words = [];
+
+    WordsBloc(this._provider) : super(const WordsInitial()) {
         on<WordsStarted>(_onStarted);
-        on<WordsSettingsLoaded>(_onSettingsLoaded);
         on<WordsAddItem>(_onAddItem);
         on<WordsEditItem>(_onEditItem);
         on<WordsDeleteItem>(_onDeleteItem);
-    }
-    
-    FutureOr<void> _onSettingsLoaded(WordsSettingsLoaded event, Emitter<WordsState> emit) async
-    {
-        settings = event.settings;
-
-        try 
-        {
-            words.clear();
-            
-            List<dynamic> wordsMap = await repository.getWords();
-
-            for (var wordMap in wordsMap) {
-                words.add(Word.fromMap(wordMap));
-            }
-
-            emit(_loadedState);
-        } 
-        catch (_) 
-        {
-            emit(const WordsError());
-        }
     }
     
     void _onStarted(WordsStarted event, Emitter<WordsState> emit) async 
     {
         emit(const WordsLoading());
         
-        settingsBloc.stream.listen((state) { 
-            if (state is SettingsLoaded) {
-                add(WordsSettingsLoaded(state.settings));
-            } 
-        });
+        try 
+        {
+            _data = await _provider.getAllData();
+            
+            for (var wordMap in _data["words"]??[]) {
+                _words.add(Word.fromMap(wordMap));
+            }
+
+            emit(WordsLoaded(
+                settings: event.settings,
+                words: this,
+            ));
+        } 
+        catch (_) 
+        {
+            emit(const WordsError());
+        }
     }
 
     void _onAddItem(WordsAddItem event, Emitter<WordsState> emit) async 
     {
         try 
         {
-            words.add(event.word);
+            _words.add(event.word);
             repository.setWords(toMap());
             emit(_loadedState);
         } 
@@ -87,11 +78,6 @@ class WordsBloc extends Bloc<WordsEvent, WordsState> {
         {
             emit(const WordsError());
         }
-    }
-
-    get _loadedState
-    {
-        return WordsLoaded(words, settings!);
     }
 
     List<Map> toMap()
