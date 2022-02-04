@@ -14,8 +14,8 @@ class SettingsLoading extends SettingsState {
 }
 
 class SettingsLoaded extends SettingsState {
-    final SettingsBloc settings;
-    const SettingsLoaded(this.settings);
+    final Settings settings;
+    const SettingsLoaded({required this.settings});
 }
 
 class SettingsError extends SettingsState {

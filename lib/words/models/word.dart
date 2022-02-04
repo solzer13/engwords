@@ -1,27 +1,26 @@
 
-import 'dart:convert';
 import 'dart:math';
 
 class Word
 {
-    String id = '';
-    String eng = '';
-    String rus = '';
-    bool learned = false;
-    int repeat = 0;
+    late String id;
+    late String eng;
+    late String rus;
+    late bool learned;
+    late int repeat;
 
     Word()
     {
-        id = _genUID();
+        Word.fromMap({});
     }
 
-    Word.fromMap(Map map)
+    Word.fromMap(Map<String, dynamic> map)
     {
         id = map['id'] ?? _genUID();
         eng = map['eng'] ?? 'No eng';
         rus = map['rus'] ?? 'No rus';
         learned = map['learned'] ?? false;
-        repeat = map['repeat'] ?? 0;
+        repeat = map['repeat'] ?? 5;
     }
 
     static String _genUID() 
@@ -54,19 +53,8 @@ class Word
             "id":id,
             "eng":eng,
             "rus":rus,
-            "learned":false,
+            "learned":learned,
             "repeat":repeat
         };
-    }
-
-    String toJson()
-    {
-        return jsonEncode(toMap());
-    }
-
-    @override
-    String toString()
-    {
-        return toJson();
     }
 }

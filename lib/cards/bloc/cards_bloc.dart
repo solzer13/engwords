@@ -2,6 +2,7 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 
+import 'package:engwords/cards/cards.dart';
 import 'package:engwords/settings/settings.dart';
 import 'package:engwords/words/words.dart';
 
@@ -10,35 +11,21 @@ part 'cards_state.dart';
 
 class CardsBloc extends Bloc<CardsEvent, CardsState> 
 {
-    RepositorySettingsBloc settings;
-    RepositoryWordsBloc words;
+    SettingsBloc settingsBloc;
+    WordsBloc wordsBloc;
     
-    Card? card;
+    Card card = Card(learnWords: [], counVarians: 0);
 
     get _loadedState
     {
-        return CardsLoaded(settings!, card!);
+        return CardsLoaded(settings: settingsBloc.settings, card: card);
     }
 
-    CardsBloc() : super(const CardsInitial())
+    CardsBloc({required this.settingsBloc, required this.wordsBloc}) : super(const CardsInitial())
     {
         on<CardsStarted>(_onStarted);
         on<CardsPressVariant>(_onPressVariant);
         on<CardsNextCard>(_onCardsNextCard);
-        on<CardsWordsLoaded>(_onCardsWordsLoaded);
-        on<CardsSettingsLoaded>(_onCardsSettingsLoaded);
-    }
-    
-    FutureOr<void> _onCardsWordsLoaded(CardsWordsLoaded event, Emitter<CardsState> emit) 
-    {
-        words = event.words;
-        _init(emit);
-    }
-
-    FutureOr<void> _onCardsSettingsLoaded(CardsSettingsLoaded event, Emitter<CardsState> emit) 
-    {
-        settings = event.settings;
-        _init(emit);
     }
     
     Future<void> _onStarted(CardsStarted event, Emitter<CardsState> emit) async
@@ -47,25 +34,25 @@ class CardsBloc extends Bloc<CardsEvent, CardsState>
 
         wordsBloc.stream.listen((state) { 
             if(state is WordsLoaded) {
-                add(CardsWordsLoaded(state.words));
-            } 
-        });
-
-        settingsBloc.stream.listen((state) { 
-            if (state is SettingsLoaded) {
-                add(CardsSettingsLoaded(state.settings));
+                
+                card = Card(
+                    learnWords: _getLearnWords(), 
+                    counVarians: state.settings.counVariants,
+                );
+                
+                emit(_loadedState);
             } 
         });
     }
 
     FutureOr<void> _onCardsNextCard(CardsNextCard event, Emitter<CardsState> emit) 
     {
-        card!.word.repeat++;
-        wordsBloc.add(WordsEditItem(card!.word));
+        card.word.repeat++;
+        wordsBloc.add(WordsEditItem(card.word));
         
         card = Card(
-            learnWords: card!.learnWords, 
-            counVarians: settings!.counVarians.toInt(),
+            learnWords: card.learnWords, 
+            counVarians: settingsBloc.settings.counVariants,
         );
 
         emit(_loadedState);
@@ -73,7 +60,7 @@ class CardsBloc extends Bloc<CardsEvent, CardsState>
 
     FutureOr<void> _onPressVariant(CardsPressVariant event, Emitter<CardsState> emit) async
     {
-        card!.checkVariant(event.variant);
+        card.checkVariant(event.variant);
         
         emit(_loadedState);
     }
@@ -82,11 +69,11 @@ class CardsBloc extends Bloc<CardsEvent, CardsState>
     {
         List<Word> _learnWords = [];
 
-        var _countWordsLern = settings!.countWordsLern.toInt() + 1;
+        var _countWordsLern = settingsBloc.settings.countWordsLearn + 1;
 
         if(_learnWords.isEmpty || _learnWords.length < _countWordsLern)
         {
-            for (var word in words!) 
+            for (var word in wordsBloc.words) 
             { 
                 if(!word.learned)
                 {
@@ -97,26 +84,6 @@ class CardsBloc extends Bloc<CardsEvent, CardsState>
         }
 
         return _learnWords;
-    }
-
-    void _init(Emitter<CardsState> emit)  
-    {
-        if(words != null && settings != null)
-        {
-            try 
-            {
-                card = Card(
-                    learnWords: _getLearnWords(), 
-                    counVarians: settings!.counVarians.toInt(),
-                );
-                
-                emit(_loadedState);
-            } 
-            catch (e) 
-            {
-                emit(CardsError('Error:' + e.toString()));
-            }
-        }
     }
 
 }

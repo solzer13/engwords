@@ -15,7 +15,7 @@ class CardsLoading extends CardsState {
 class CardsLoaded extends CardsState {
     final Settings settings;
     final Card card;
-    const CardsLoaded(this.settings, this.card);
+    const CardsLoaded({required this.settings, required this.card});
 }
 
 class CardsError extends CardsState {

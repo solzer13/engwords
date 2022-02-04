@@ -5,9 +5,10 @@ import 'package:engwords/settings/settings.dart';
 
 class SettingsWidgetList extends StatelessWidget 
 {
-    final SettingsBloc settings;
+    final SettingsBloc settingsBloc;
+    final Settings settings;
 
-    const SettingsWidgetList({Key? key, required this.settings}) : super(key: key);
+    const SettingsWidgetList({Key? key, required this.settings, required this.settingsBloc}) : super(key: key);
 
     @override
     Widget build(BuildContext context) 
@@ -36,9 +37,9 @@ class SettingsWidgetList extends StatelessWidget
                     label: settings.countRepeatWord.round().toString(),
                     onChanged: (double value) {
                         settings.countRepeatWord = value.toInt();
-                        settings.add(const SettingsChange());
+                        settingsBloc.add(const SettingsChange());
                     },
-                    onChangeEnd: (double val) => settings.add(const SettingsChangeEnd()),
+                    onChangeEnd: (double val) => settingsBloc.add(const SettingsChangeEnd()),
                 ),
             ],
         );
@@ -59,9 +60,9 @@ class SettingsWidgetList extends StatelessWidget
                     label: settings.counVariants.toString(),
                     onChanged: (double value) {
                         settings.counVariants = value.toInt();
-                        settings.add(const SettingsChange());
+                        settingsBloc.add(const SettingsChange());
                     },
-                    onChangeEnd: (double val) => settings.add(const SettingsChangeEnd()),
+                    onChangeEnd: (double val) => settingsBloc.add(const SettingsChangeEnd()),
                 ),
             ]
         );
@@ -82,9 +83,9 @@ class SettingsWidgetList extends StatelessWidget
                     label: settings.countWordsLearn.toString(),
                     onChanged: (double value) {
                         settings.countWordsLearn = value.toInt();
-                        settings.add(const SettingsChange());
+                        settingsBloc.add(const SettingsChange());
                     },
-                    onChangeEnd: (double val) => settings.add(const SettingsChangeEnd()),
+                    onChangeEnd: (double val) => settingsBloc.add(const SettingsChangeEnd()),
                 ),
             ],
         );
@@ -107,6 +108,7 @@ class SettingsWidget extends StatelessWidget
                 if (state is SettingsLoaded) 
                 {
                     return SettingsWidgetList(
+                        settingsBloc: context.read<SettingsBloc>(),
                         settings: state.settings,
                     );
                 }

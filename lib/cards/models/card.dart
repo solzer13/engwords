@@ -1,6 +1,7 @@
 
 
 import 'package:engwords/cards/cards.dart';
+import 'package:engwords/words/words.dart';
 
 class Card
 {

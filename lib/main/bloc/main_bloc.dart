@@ -9,28 +9,33 @@ part 'main_state.dart';
 
 class MainBloc extends Bloc<MainEvent, MainState> 
 {
-    SettingsBloc blocSettings = SettingsBloc(FileDataProvider("settings.txt"));
-    WordsBloc blocWords = WordsBloc(FileDataProvider("words.txt"));
-    CardsBloc blocCards = CardsBloc();
+    late SettingsBloc blocSettings;
+    late WordsBloc blocWords;
+    late CardsBloc blocCards;
 
     MainBloc() : super(const MainInitial()) 
     {
+        blocSettings = SettingsBloc(
+            provider: FileDataProvider("settings.txt")
+        );
+
+        blocWords = WordsBloc(
+            provider: FileDataProvider("words.txt"), 
+            settingsBloc: blocSettings
+        );
+
+        blocCards = CardsBloc(
+            settingsBloc: blocSettings, 
+            wordsBloc: blocWords
+        );
+
         on<MainStarted>(_onStarted);
     }
 
     Future<void> _onStarted(event, emit) async 
     {
         blocSettings.add(const SettingsStarted());
-        blocSettings.stream.listen((state) {
-            if(state is SettingsLoaded){
-                blocWords.add(WordsStarted(blocSettings));
-                blocWords.stream.listen((state) { 
-                    if(state is WordsLoaded){
-                        blocCards.add(CardsStarted(blocSettings, blocWords));
-                        emit(const MainLoaded());
-                    }
-                });
-            }
-        });
+        blocWords.add(const WordsStarted());
+        blocCards.add(const CardsStarted());
     }
 }

@@ -10,11 +10,13 @@ part 'words_state.dart';
 
 class WordsBloc extends Bloc<WordsEvent, WordsState> {
 
-    final DataProvider _provider;
-    Map<String, dynamic> _data = {};
-    final List<Word> _words = [];
+    final DataProvider provider;
+    final SettingsBloc settingsBloc;
 
-    WordsBloc(this._provider) : super(const WordsInitial()) {
+    final List<Word> words = [];
+
+
+    WordsBloc({required this.provider, required this.settingsBloc}) : super(const WordsInitial()) {
         on<WordsStarted>(_onStarted);
         on<WordsAddItem>(_onAddItem);
         on<WordsEditItem>(_onEditItem);
@@ -24,68 +26,56 @@ class WordsBloc extends Bloc<WordsEvent, WordsState> {
     void _onStarted(WordsStarted event, Emitter<WordsState> emit) async 
     {
         emit(const WordsLoading());
-        
-        try 
-        {
-            _data = await _provider.getAllData();
-            
-            for (var wordMap in _data["words"]??[]) {
-                _words.add(Word.fromMap(wordMap));
-            }
 
-            emit(WordsLoaded(
-                settings: event.settings,
-                words: this,
-            ));
-        } 
-        catch (_) 
-        {
-            emit(const WordsError());
-        }
+        settingsBloc.stream.listen((state) async { 
+            if(state is SettingsLoaded){
+                var data = await provider.getAllData();
+                for (var wordMap in data["words"]??[]) {
+                    words.add(Word.fromMap(wordMap));
+                }
+                emit(WordsLoaded(
+                    settings: state.settings,
+                    words: words,
+                ));
+            }
+        });
     }
 
     void _onAddItem(WordsAddItem event, Emitter<WordsState> emit) async 
     {
-        try 
-        {
-            _words.add(event.word);
-            repository.setWords(toMap());
-            emit(_loadedState);
-        } 
-        catch (_) 
-        {
-            emit(const WordsError());
-        }
+        words.add(event.word);
+        await provider.writeAllData(toMap());
+        emit(WordsLoaded(
+            settings: settingsBloc.settings,
+            words: words,
+        ));
     }
 
-    FutureOr<void> _onEditItem(WordsEditItem event, Emitter<WordsState> emit) 
+    FutureOr<void> _onEditItem(WordsEditItem event, Emitter<WordsState> emit) async
     {
-        //var wordItem = words.firstWhere((word) => word.id == event.word.id);
-        //wordItem = event.word;
-        
-        repository.setWords(toMap());
+        await provider.writeAllData(toMap());
+        emit(WordsLoaded(
+            settings: settingsBloc.settings,
+            words: words,
+        ));
     }
 
     void _onDeleteItem(WordsDeleteItem event, Emitter<WordsState> emit) async 
     {
-        try 
-        {
-            words.remove(event.word);
-            repository.setWords(toMap());
-            emit(_loadedState);
-        } 
-        catch (_) 
-        {
-            emit(const WordsError());
-        }
+        words.remove(event.word);
+        await provider.writeAllData(toMap());
+        emit(WordsLoaded(
+            settings: settingsBloc.settings,
+            words: words,
+        ));
     }
 
-    List<Map> toMap()
+    Map<String,dynamic> toMap()
     {
-        List<Map> map = [];
+        Map<String,dynamic> map = {"words":[]};
         
         for (var word in words) {
-            map.add(word.toMap());
+            map["words"].add(word.toMap());
         }
 
         return map;

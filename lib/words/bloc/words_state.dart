@@ -13,8 +13,8 @@ class WordsLoading extends WordsState {
 }
 
 class WordsLoaded extends WordsState {
-    final SettingsBloc settings;
-    final WordsBloc words;
+    final Settings settings;
+    final List<Word> words;
     const WordsLoaded({required this.settings, required this.words});
 }
 
