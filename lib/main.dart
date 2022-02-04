@@ -28,9 +28,9 @@ class SimpleBlocObserver extends BlocObserver
         super.onError(bloc, error, stackTrace);
     }
 
-    @override
-    void onTransition(Bloc bloc, Transition transition) {
-        super.onTransition(bloc, transition);
-        //log('$transition');
-    }
+    // @override
+    // void onTransition(Bloc bloc, Transition transition) {
+    //     super.onTransition(bloc, transition);
+    //     log('$transition');
+    // }
 }
