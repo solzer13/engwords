@@ -14,11 +14,11 @@ class WordsLoadedState extends CardsEvent{
 }
 
 class CardsNextCard extends CardsEvent{
-    final Card oldCard;
+    final CardModel oldCard;
     const CardsNextCard({required this.oldCard});
 }
 
 class CardsPressVariant extends CardsEvent{
-    final Variant variant;
+    final VariantModel variant;
     const CardsPressVariant({required this.variant});
 }

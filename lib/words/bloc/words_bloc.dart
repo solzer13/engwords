@@ -19,6 +19,7 @@ class WordsBloc extends Bloc<WordsEvent, WordsState> {
     WordsBloc({required this.provider, required this.settingsBloc}) : super(const WordsInitial()) {
         on<WordsStarted>(_onStarted);
         on<SettingsLoadedState>(_onSettingsLoadedState);
+        on<WordsCheckboxChange>(_onCheckboxChange);
         on<WordsAddItem>(_onAddItem);
         on<WordsEditItem>(_onEditItem);
         on<WordsDeleteItem>(_onDeleteItem);
@@ -46,18 +47,23 @@ class WordsBloc extends Bloc<WordsEvent, WordsState> {
     {
         try
         {
+            words.clear();
             var data = await provider.getAllData();
             for (var wordMap in data["words"]??[]) {
                 words.add(Word.fromMap(wordMap));
             }
-            emit(WordsLoaded(
-                words: words,
-            ));
+            emit(WordsLoaded(words: words));
         }
         catch(e)
         {
             addError(e, StackTrace.current);
         }
+    }
+
+    FutureOr<void> _onCheckboxChange(WordsCheckboxChange event, Emitter<WordsState> emit) 
+    {
+        event.word.checkbox = event.checked;
+        emit(WordsLoaded(words: words));
     }
 
     void _onAddItem(WordsAddItem event, Emitter<WordsState> emit) async 

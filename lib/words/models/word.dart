@@ -9,6 +9,8 @@ class Word
     late bool learned;
     late int repeat;
 
+    bool checkbox = false;
+
     Word() : this.fromMap({});
 
     Word.fromMap(Map<String, dynamic> map)
@@ -17,7 +19,7 @@ class Word
         eng = map['eng'] ?? 'No eng';
         rus = map['rus'] ?? 'No rus';
         learned = map['learned'] ?? false;
-        repeat = map['repeat'] ?? 5;
+        repeat = map['repeat'] ?? 0;
     }
 
     static String _genUID() 

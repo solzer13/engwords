@@ -3,25 +3,25 @@
 import 'package:engwords/cards/cards.dart';
 import 'package:engwords/words/words.dart';
 
-class Card
+class CardModel
 {
     final List<Word> learnWords;
     final int counVariants;
 
     Word word = Word();
-    List<Variant> variants = [];
+    List<VariantModel> variants = [];
 
-    Card({required this.learnWords, required this.counVariants})
+    CardModel({required this.learnWords, required this.counVariants})
     {
         word = (learnWords..shuffle()).first;
 
-        variants.add(Variant(word));
+        variants.add(VariantModel(word));
 
         for (var learnWord in learnWords) 
         { 
             if(learnWord != word)
             {
-                variants.add(Variant(learnWord));
+                variants.add(VariantModel(learnWord));
                 if(variants.length == counVariants) break;
             }
         }
@@ -29,7 +29,7 @@ class Card
         variants.shuffle();
     }
 
-    void checkVariant(Variant variant)
+    void checkVariant(VariantModel variant)
     {
         variant.checked = variant.eng == word.eng;
     }

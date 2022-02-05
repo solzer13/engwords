@@ -13,6 +13,13 @@ class SettingsLoadedState extends WordsEvent{
     const SettingsLoadedState({required this.stateSettingsLoaded});
 }
 
+class WordsCheckboxChange extends WordsEvent
+{
+    final Word word;
+    final bool checked;
+    const WordsCheckboxChange({required this.word, required this.checked});
+}
+
 class WordsDeleteItem extends WordsEvent
 {
     final Word word;

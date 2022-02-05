@@ -13,7 +13,7 @@ class CardsLoading extends CardsState {
 }
 
 class CardsLoaded extends CardsState {
-    final Card card;
+    final CardModel card;
     const CardsLoaded({required this.card});
 }
 

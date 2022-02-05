@@ -14,7 +14,7 @@ class CardsBloc extends Bloc<CardsEvent, CardsState>
     SettingsBloc settingsBloc;
     WordsBloc wordsBloc;
     
-    late Card card = Card(learnWords: [], counVariants: 0);
+    late CardModel card = CardModel(learnWords: [], counVariants: 0);
 
     CardsBloc({required this.settingsBloc, required this.wordsBloc}) : super(const CardsInitial())
     {
@@ -48,7 +48,7 @@ class CardsBloc extends Bloc<CardsEvent, CardsState>
         {
             if(_checkWords())
             {
-                card = Card(
+                card = CardModel(
                     learnWords: _getLearnWords(), 
                     counVariants: settingsBloc.settings.counVariants,
                 );
@@ -69,14 +69,28 @@ class CardsBloc extends Bloc<CardsEvent, CardsState>
     FutureOr<void> _onCardsNextCard(CardsNextCard event, Emitter<CardsState> emit) 
     {
         card.word.repeat++;
+
+        if(card.word.repeat == settingsBloc.settings.countRepeatWord)
+        {
+            card.word.learned = true;
+            card.learnWords.remove(card.word);
+        }
+
         wordsBloc.add(WordsEditItem(card.word));
         
-        card = Card(
-            learnWords: card.learnWords, 
-            counVariants: settingsBloc.settings.counVariants,
-        );
+        if(_checkWords())
+        {
+            card = CardModel(
+                learnWords: card.learnWords, 
+                counVariants: settingsBloc.settings.counVariants,
+            );
 
-        emit(CardsLoaded(card: card));
+            emit(CardsLoaded(card: card));
+        }
+        else
+        {
+            emit(const CardsError(message: "Нет доступных слов для изучения!"));
+        }
     }
 
     FutureOr<void> _onPressVariant(CardsPressVariant event, Emitter<CardsState> emit) async
