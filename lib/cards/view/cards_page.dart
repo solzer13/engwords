@@ -1,12 +1,23 @@
 
+import 'package:engwords/page_interface.dart';
+import 'package:engwords/settings/bloc/settings_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:engwords/cards/cards.dart' as cards;
 
-class CardsWidget extends StatelessWidget
+class CardsWidget extends StatelessWidget implements WidgetPage
 {
-  const CardsWidget({Key? key}) : super(key: key);
+    const CardsWidget({Key? key}) : super(key: key);
+
+    @override
+    final String title = "Cards";
  
+    @override
+    final button = const BottomNavigationBarItem(
+        icon: Icon(Icons.settings),
+        label: 'Cards',
+    );
+
     Widget buttonVariant(BuildContext context, cards.Card card, cards.Variant variant)
     {
         var bgColor = MaterialStateProperty.all<Color>(Colors.grey);
@@ -17,7 +28,7 @@ class CardsWidget extends StatelessWidget
         
             if(variant.checked!)
             {
-                Future.delayed(const Duration(seconds: 1), (){context.read<cards.CardsBloc>().add(cards.CardsNextCard(card));});
+                Future.delayed(const Duration(seconds: 1), (){context.read<cards.CardsBloc>().add(cards.CardsNextCard(oldCard: card));});
             }
         }
 
@@ -25,7 +36,7 @@ class CardsWidget extends StatelessWidget
             style: ButtonStyle(
                 backgroundColor: bgColor,
             ),
-            onPressed: () { context.read<cards.CardsBloc>().add(cards.CardsPressVariant(variant)); },
+            onPressed: () { context.read<cards.CardsBloc>().add(cards.CardsPressVariant(variant:variant)); },
             child: Text(variant.rus, 
                 textAlign: TextAlign.center,
                 style: TextStyle(
@@ -68,7 +79,7 @@ class CardsWidget extends StatelessWidget
                             Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
-                                    Text(state.card.word.repeat.toString() + ' / ' + state.settings.countRepeatWord.round().toString(),
+                                    Text(state.card.word.repeat.toString() + ' / ' + context.read<SettingsBloc>().settings.countRepeatWord.toString(),
                                         style: TextStyle(
                                             fontSize: 20,
                                             color: Colors.grey.shade900

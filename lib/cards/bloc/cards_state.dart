@@ -13,12 +13,11 @@ class CardsLoading extends CardsState {
 }
 
 class CardsLoaded extends CardsState {
-    final Settings settings;
     final Card card;
-    const CardsLoaded({required this.settings, required this.card});
+    const CardsLoaded({required this.card});
 }
 
 class CardsError extends CardsState {
     final String message;
-    const CardsError(this.message);
+    const CardsError({required this.message});
 }

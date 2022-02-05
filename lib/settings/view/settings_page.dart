@@ -1,4 +1,5 @@
 
+import 'package:engwords/page_interface.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:engwords/settings/settings.dart';
@@ -92,9 +93,18 @@ class SettingsWidgetList extends StatelessWidget
     }
 }
 
-class SettingsWidget extends StatelessWidget
+class SettingsWidget extends StatelessWidget implements WidgetPage
 {
     const SettingsWidget({Key? key}) : super(key: key);
+
+    @override
+    final String title = "Settings";
+
+    @override
+    final button = const BottomNavigationBarItem(
+        icon: Icon(Icons.settings),
+        label: 'Settings',
+    );
 
     @override
     Widget build(BuildContext context) 

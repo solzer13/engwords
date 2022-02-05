@@ -18,6 +18,7 @@ class WordsBloc extends Bloc<WordsEvent, WordsState> {
 
     WordsBloc({required this.provider, required this.settingsBloc}) : super(const WordsInitial()) {
         on<WordsStarted>(_onStarted);
+        on<SettingsLoadedState>(_onSettingsLoadedState);
         on<WordsAddItem>(_onAddItem);
         on<WordsEditItem>(_onEditItem);
         on<WordsDeleteItem>(_onDeleteItem);
@@ -27,35 +28,56 @@ class WordsBloc extends Bloc<WordsEvent, WordsState> {
     {
         emit(const WordsLoading());
 
-        settingsBloc.stream.listen((state) async { 
-            if(state is SettingsLoaded){
-                var data = await provider.getAllData();
-                for (var wordMap in data["words"]??[]) {
-                    words.add(Word.fromMap(wordMap));
+        try
+        {
+            settingsBloc.stream.listen((state) async { 
+                if(state is SettingsLoaded){
+                    add(SettingsLoadedState(stateSettingsLoaded: state));
                 }
-                emit(WordsLoaded(
-                    settings: state.settings,
-                    words: words,
-                ));
+            });
+        }
+        catch(e)
+        {
+            addError(Exception('increment error!'), StackTrace.current);
+        }
+    }
+
+    void _onSettingsLoadedState(SettingsLoadedState event, Emitter<WordsState> emit) async 
+    {
+        try
+        {
+            var data = await provider.getAllData();
+            for (var wordMap in data["words"]??[]) {
+                words.add(Word.fromMap(wordMap));
             }
-        });
+            emit(WordsLoaded(
+                words: words,
+            ));
+        }
+        catch(e)
+        {
+            addError(e, StackTrace.current);
+        }
     }
 
     void _onAddItem(WordsAddItem event, Emitter<WordsState> emit) async 
     {
-        words.add(event.word);
-        await provider.writeAllData(toMap());
-        emit(WordsLoaded(
-            settings: settingsBloc.settings,
-            words: words,
-        ));
+        try
+        {
+            words.add(event.word);
+            await provider.writeAllData(toMap());
+            emit(WordsLoaded(words: words));
+        }
+        catch(e)
+        {
+            addError(e, StackTrace.current);
+        }
     }
 
     FutureOr<void> _onEditItem(WordsEditItem event, Emitter<WordsState> emit) async
     {
         await provider.writeAllData(toMap());
         emit(WordsLoaded(
-            settings: settingsBloc.settings,
             words: words,
         ));
     }
@@ -65,7 +87,6 @@ class WordsBloc extends Bloc<WordsEvent, WordsState> {
         words.remove(event.word);
         await provider.writeAllData(toMap());
         emit(WordsLoaded(
-            settings: settingsBloc.settings,
             words: words,
         ));
     }

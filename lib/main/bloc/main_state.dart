@@ -13,5 +13,6 @@ class MainLoading extends MainState {
 }
 
 class MainLoaded extends MainState {
-    const MainLoaded();
+    final int index;
+    const MainLoaded({required this.index});
 }

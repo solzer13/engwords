@@ -6,12 +6,12 @@ import 'package:engwords/words/words.dart';
 class Card
 {
     final List<Word> learnWords;
-    final int counVarians;
+    final int counVariants;
 
     Word word = Word();
     List<Variant> variants = [];
 
-    Card({required this.learnWords, required this.counVarians})
+    Card({required this.learnWords, required this.counVariants})
     {
         word = (learnWords..shuffle()).first;
 
@@ -22,7 +22,7 @@ class Card
             if(learnWord != word)
             {
                 variants.add(Variant(learnWord));
-                if(variants.length == counVarians) break;
+                if(variants.length == counVariants) break;
             }
         }
 

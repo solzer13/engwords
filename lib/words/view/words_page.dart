@@ -1,11 +1,24 @@
 
+import 'package:engwords/page_interface.dart';
 import 'package:engwords/settings/settings.dart';
 import 'package:engwords/words/words.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class WordsWidget extends StatelessWidget
+part 'words_page_list.dart';
+part 'words_add_dialog.dart';
+
+class WordsWidget extends StatelessWidget implements WidgetPage
 {
+    @override
+    final title = "Words";
+
+    @override
+    final button = const BottomNavigationBarItem(
+        icon: Icon(Icons.settings),
+        label: 'Words',
+    );
+
     const WordsWidget({Key? key}) : super(key: key);
 
     @override
@@ -20,24 +33,10 @@ class WordsWidget extends StatelessWidget
                 if (state is WordsLoaded) 
                 {
                     return Scaffold(
-                        body: ListWordsWidget(
-                            bloc: context.read<WordsBloc>(),
-                            settings: state.settings,
+                        body: WordsPageListWidget(
                             words: state.words,
                         ),
-                        floatingActionButton: FloatingActionButton(
-                            onPressed: () {
-                                showDialog<void>(
-                                    context: context,
-                                    barrierDismissible: false, // user must tap button!
-                                    builder: (BuildContext context) => WordsAddDialogWidget(
-                                        bloc: context.read<WordsBloc>(),
-                                    )
-                                );
-                            },
-                            child: const Icon(Icons.add),
-                            backgroundColor: Colors.blue,
-                        ),
+                        floatingActionButton: _floatingButton(context),
                     );
                 }
                 return const Text('Something went wrong!');
@@ -45,94 +44,20 @@ class WordsWidget extends StatelessWidget
         );
     }
 
-}
-
-
-class ListWordsWidget extends StatelessWidget
-{
-    final Bloc bloc;
-    final Settings settings;
-    final List<Word> words;
-
-    const ListWordsWidget({Key? key, required this.bloc, required this.settings, required this.words}) : super(key: key);
-
-    @override
-    Widget build(BuildContext context) 
+    FloatingActionButton _floatingButton(BuildContext context)
     {
-        return ListView.builder(
-            padding: const EdgeInsets.all(8),
-            itemCount: words.length,
-            itemBuilder: (BuildContext context, int index) {
-                return ListTile(
-                    title: Text(words[index].eng),
-                    subtitle: Text(words[index].rus),
-                    visualDensity: VisualDensity.compact,
-                    leading: Text(words[index].repeat.toString() + '/' + settings.countRepeatWord.round().toString()),
-                    trailing: IconButton(
-                        icon: const Icon(Icons.delete),
-                        iconSize: 24.0,
-                        onPressed: () { bloc.add(WordsDeleteItem(words[index])); },
-                    ),
+        return FloatingActionButton(
+            onPressed: () {
+                showDialog<void>(
+                    context: context,
+                    barrierDismissible: false,
+                    builder: (BuildContext context) => const WordsAddDialogWidget()
                 );
-            }
+            },
+            child: const Icon(Icons.add),
+            backgroundColor: Colors.blue,
         );
     }
+
 }
 
-class WordsAddDialogWidget extends StatelessWidget
-{
-    final Bloc bloc;
-
-    const WordsAddDialogWidget({Key? key, required this.bloc}) : super(key: key);
-
-    @override
-    Widget build(BuildContext context) 
-    {
-        var word = Word();
-
-        return SimpleDialog(
-            title: const Text('Add word'),
-            contentPadding: const EdgeInsets.all(10),
-            children: [
-                Column(
-                children: [
-                    TextField(
-                    onChanged: (value) { word.eng = value; },
-                    decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: 'English',
-                    ),
-                    ),
-                    Container(height: 10),
-                    TextField(
-                    onChanged: (value) { word.rus = value; },
-                    decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: 'Russian',
-                    ),
-                    ),
-                    Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                        TextButton(
-                        onPressed: () {
-                            bloc.add(WordsAddItem(word));
-                            Navigator.pop(context);
-                        },
-                        child: const Text('Add'),
-                        ),
-                        TextButton(
-                        onPressed: () {
-                            Navigator.pop(context);
-                        },
-                        child: const Text('Chancel'),
-                        ),
-                    ],
-                    ),
-                ],
-                ),
-            ],
-        );
-    }
-}

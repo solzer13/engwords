@@ -9,10 +9,7 @@ class Word
     late bool learned;
     late int repeat;
 
-    Word()
-    {
-        Word.fromMap({});
-    }
+    Word() : this.fromMap({});
 
     Word.fromMap(Map<String, dynamic> map)
     {

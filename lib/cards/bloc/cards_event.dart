@@ -8,14 +8,17 @@ class CardsStarted extends CardsEvent {
     const CardsStarted();
 }
 
-class CardsNextCard extends CardsEvent
-{
-    final Card oldCard;
-    const CardsNextCard(this.oldCard);
+class WordsLoadedState extends CardsEvent{
+    final WordsLoaded stateWordsLoaded;
+    const WordsLoadedState({required this.stateWordsLoaded});
 }
 
-class CardsPressVariant extends CardsEvent
-{
+class CardsNextCard extends CardsEvent{
+    final Card oldCard;
+    const CardsNextCard({required this.oldCard});
+}
+
+class CardsPressVariant extends CardsEvent{
     final Variant variant;
-    const CardsPressVariant(this.variant);
+    const CardsPressVariant({required this.variant});
 }
