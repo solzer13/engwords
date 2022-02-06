@@ -1,6 +1,35 @@
 
 part of 'page.dart';
 
+class PopMenuButtonCheck extends StatelessWidget
+{
+    const PopMenuButtonCheck({Key? key}) : super(key: key);
+
+    @override
+    Widget build(BuildContext context) 
+    {
+        return PopupMenuButton(
+            icon: const Icon(Icons.checklist_rtl),
+            tooltip: "Выделение",
+            itemBuilder: _items,
+        );
+    }
+
+    List<PopupMenuEntry> _items(BuildContext context)
+    {
+        return [
+            PopupMenuItem(
+                child: const Text("Выделить все"),
+                onTap: () => context.read<WordsBloc>().add(const WordsBlocEventCheckboxChangeAll(checked: true)),
+            ),
+            PopupMenuItem(
+                child: const Text("Снять выделение"),
+                onTap: () => context.read<WordsBloc>().add(const WordsBlocEventCheckboxChangeAll(checked: false)),
+            ),
+        ];
+    }
+}
+
 class PopMenuButtonSort extends StatelessWidget
 {
     const PopMenuButtonSort({Key? key}) : super(key: key);

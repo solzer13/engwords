@@ -23,7 +23,8 @@ class WordsViewPage extends StatelessWidget implements ViewPageInterface
     @override
     List<Widget> get actions => [
         const PopMenuButtonSort(),
-        const PopMenuButtonMore(),
+        const PopMenuButtonCheck(),
+        const PopMenuButtonMore()
     ];
 
     const WordsViewPage({Key? key}) : super(key: key);

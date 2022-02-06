@@ -26,10 +26,9 @@ class CardsBloc extends Bloc<CardsBlocEvent, CardsBlocState>
     
     Future<void> _onStarted(CardsStarted event, Emitter<CardsBlocState> emit) async
     {
-        emit(const CardsLoading());
-
         try
         {
+            emit(const CardsLoading());
             wordsBloc.stream.listen((state) { 
                 if(state is WordsBlocStateLoaded) {
                     add(WordsLoadedState(stateWordsLoaded: state));
@@ -49,7 +48,7 @@ class CardsBloc extends Bloc<CardsBlocEvent, CardsBlocState>
             if(_checkWords())
             {
                 card = CardsModel(
-                    learnWords: _getLearnWords(), 
+                    learnWords: _getLearnWords([]), 
                     counVariants: settingsBloc.settings.counVariants,
                 );
                 
@@ -68,35 +67,46 @@ class CardsBloc extends Bloc<CardsBlocEvent, CardsBlocState>
 
     FutureOr<void> _onCardsNextCard(CardsNextCard event, Emitter<CardsBlocState> emit) 
     {
-        card.word.repeat++;
-
-        if(card.word.repeat == settingsBloc.settings.countRepeatWord)
+        try
         {
-            card.learnWords.remove(card.word);
-        }
+            card.word.repeat++;
 
-        //wordsBloc.add(WordsBlocEventEditItem(card.word));
-        
-        if(_checkWords())
-        {
-            card = CardsModel(
-                learnWords: card.learnWords, 
-                counVariants: settingsBloc.settings.counVariants,
-            );
+            if(card.word.repeat == settingsBloc.settings.countRepeatWord)
+            {
+                card.learnWords.remove(card.word);
+            }
 
-            emit(CardsLoaded(card: card));
+            if(_checkWords())
+            {
+                card = CardsModel(
+                    learnWords: _getLearnWords(card.learnWords), 
+                    counVariants: settingsBloc.settings.counVariants,
+                );
+
+                emit(CardsLoaded(card: card));
+            }
+            else
+            {
+                emit(const CardsError(message: "Нет доступных слов для изучения!"));
+            }
         }
-        else
+        catch(exception)
         {
-            emit(const CardsError(message: "Нет доступных слов для изучения!"));
-        }
+            addError(exception, StackTrace.current);
+        } 
     }
 
     FutureOr<void> _onPressVariant(CardsPressVariant event, Emitter<CardsBlocState> emit) async
     {
-        card.checkVariant(event.variant);
-        
-        emit(CardsLoaded(card: card));
+        try
+        {
+            card.checkVariant(event.variant);
+            emit(CardsLoaded(card: card));
+        }
+        catch(exception)
+        {
+            addError(exception, StackTrace.current);
+        } 
     }
 
     bool _checkWords()
@@ -112,21 +122,23 @@ class CardsBloc extends Bloc<CardsBlocEvent, CardsBlocState>
         return false;
     }
 
-    List<WordsModel> _getLearnWords()
+    List<WordsModel> _getLearnWords(List<WordsModel> _learnWords)
     {
-        List<WordsModel> _learnWords = [];
-
-        var _countWordsLern = settingsBloc.settings.countWordsLearn + 1;
-
         for (var word in wordsBloc.words) 
         { 
+            if(_learnWords.length == settingsBloc.settings.countWordsLearn) 
+            {
+                break;
+            }
             if(word.repeat < settingsBloc.settings.countRepeatWord)
             {
-                _learnWords.add(word);
-                if(_learnWords.length == _countWordsLern) break;
+                if(!_learnWords.contains(word))
+                {
+                    _learnWords.add(word);
+                }
             }
         }
-       
+
         return _learnWords;
     }
 

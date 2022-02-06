@@ -32,6 +32,11 @@ class WordsBlocEventCheckboxChange extends WordsBlocEvent{
     const WordsBlocEventCheckboxChange({required this.word, required this.checked});
 }
 
+class WordsBlocEventCheckboxChangeAll extends WordsBlocEvent{
+    final bool checked;
+    const WordsBlocEventCheckboxChangeAll({required this.checked});
+}
+
 class WordsBlocEventDelete extends WordsBlocEvent{
     const WordsBlocEventDelete();
 }

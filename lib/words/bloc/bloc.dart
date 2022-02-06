@@ -19,6 +19,7 @@ class WordsBloc extends Bloc<WordsBlocEvent, WordsBlocState> {
         on<WordsBlocEventStarted>(_onStarted);
         on<WordsBlocEventSettingsLoaded>(_onSettingsLoadedState);
         on<WordsBlocEventCheckboxChange>(_onCheckboxChange);
+        on<WordsBlocEventCheckboxChangeAll>(_onCheckboxChangeAll);
         on<WordsBlocEventSortAbc>(_onSortAbc);
         on<WordsBlocEventSortRepeat>(_onSortRepeat);
         on<WordsBlocEventChangeLearned>(_onChangeLearned);
@@ -65,6 +66,21 @@ class WordsBloc extends Bloc<WordsBlocEvent, WordsBlocState> {
         try
         {
             event.word.checked = event.checked;
+            emit(WordsBlocStateLoaded(words: words));
+        }
+        catch(e)
+        {
+            addError(e, StackTrace.current);
+        }
+    }
+
+    FutureOr<void> _onCheckboxChangeAll(WordsBlocEventCheckboxChangeAll event, Emitter<WordsBlocState> emit) 
+    {
+        try
+        {
+            for (var word in words) {
+                word.checked = event.checked;
+            }
             emit(WordsBlocStateLoaded(words: words));
         }
         catch(e)

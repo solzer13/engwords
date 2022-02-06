@@ -49,7 +49,7 @@ class SimpleBlocObserver extends BlocObserver
     @override
     void onEvent(Bloc bloc, Object? event) {
         super.onEvent(bloc, event);
-        log('${bloc.runtimeType} $event');
+        log('EVENT: ${bloc.runtimeType} $event');
     }
 
     @override
