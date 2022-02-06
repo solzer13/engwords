@@ -31,7 +31,7 @@ class CardsBloc extends Bloc<CardsBlocEvent, CardsBlocState>
         try
         {
             wordsBloc.stream.listen((state) { 
-                if(state is WordsLoaded) {
+                if(state is WordsBlocStateLoaded) {
                     add(WordsLoadedState(stateWordsLoaded: state));
                 } 
             });
@@ -72,11 +72,10 @@ class CardsBloc extends Bloc<CardsBlocEvent, CardsBlocState>
 
         if(card.word.repeat == settingsBloc.settings.countRepeatWord)
         {
-            card.word.learned = true;
             card.learnWords.remove(card.word);
         }
 
-        wordsBloc.add(WordsEditItem(card.word));
+        //wordsBloc.add(WordsBlocEventEditItem(card.word));
         
         if(_checkWords())
         {
@@ -104,7 +103,7 @@ class CardsBloc extends Bloc<CardsBlocEvent, CardsBlocState>
     {
         if(wordsBloc.words.isNotEmpty)
         {
-            if(wordsBloc.words.any((word) => !word.learned))
+            if(wordsBloc.words.any((word) => word.repeat < settingsBloc.settings.countRepeatWord))
             {
                 return true;
             }
@@ -121,7 +120,7 @@ class CardsBloc extends Bloc<CardsBlocEvent, CardsBlocState>
 
         for (var word in wordsBloc.words) 
         { 
-            if(!word.learned)
+            if(word.repeat < settingsBloc.settings.countRepeatWord)
             {
                 _learnWords.add(word);
                 if(_learnWords.length == _countWordsLern) break;

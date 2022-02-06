@@ -32,6 +32,6 @@ class CardsModel
 
     void checkVariant(CardsModelVariant variant)
     {
-        variant.checked = variant.eng == word.eng;
+        variant.verified = variant.eng == word.eng;
     }
 }

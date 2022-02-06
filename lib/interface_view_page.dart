@@ -5,5 +5,5 @@ abstract class ViewPageInterface
 {
     String get title;
     BottomNavigationBarItem get button;
-    List<IconButton> get actions;
+    List<Widget> get actions;
 }

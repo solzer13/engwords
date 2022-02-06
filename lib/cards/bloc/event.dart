@@ -9,7 +9,7 @@ class CardsStarted extends CardsBlocEvent {
 }
 
 class WordsLoadedState extends CardsBlocEvent{
-    final WordsLoaded stateWordsLoaded;
+    final WordsBlocStateLoaded stateWordsLoaded;
     const WordsLoadedState({required this.stateWordsLoaded});
 }
 

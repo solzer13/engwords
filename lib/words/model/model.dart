@@ -6,10 +6,9 @@ class WordsModel
     late String id;
     late String eng;
     late String rus;
-    late bool learned;
     late int repeat;
 
-    bool checkbox = false;
+    bool checked = false;
 
     WordsModel() : this.fromMap({});
 
@@ -18,7 +17,6 @@ class WordsModel
         id = map['id'] ?? _genUID();
         eng = map['eng'] ?? 'No eng';
         rus = map['rus'] ?? 'No rus';
-        learned = map['learned'] ?? false;
         repeat = map['repeat'] ?? 0;
     }
 
@@ -52,7 +50,6 @@ class WordsModel
             "id":id,
             "eng":eng,
             "rus":rus,
-            "learned":learned,
             "repeat":repeat
         };
     }

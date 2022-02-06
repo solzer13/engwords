@@ -37,7 +37,7 @@ class WordsViewPageAddDialog extends StatelessWidget
                     children: [
                         TextButton(
                         onPressed: () {
-                            context.read<WordsBloc>().add(WordsAddItem(word));
+                            context.read<WordsBloc>().add(WordsBlocEventAddItem(word));
                             Navigator.pop(context);
                         },
                         child: const Text('Add'),

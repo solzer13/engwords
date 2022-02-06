@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'list.dart';
 part 'add_dialog.dart';
+part 'pop_menu_buttons.dart';
 
 class WordsViewPage extends StatelessWidget implements ViewPageInterface
 {
@@ -20,20 +21,24 @@ class WordsViewPage extends StatelessWidget implements ViewPageInterface
     );
 
     @override
-    List<IconButton> get actions => [];
+    List<Widget> get actions => [
+        const PopMenuButtonSort(),
+        const PopMenuButtonMore(),
+    ];
 
     const WordsViewPage({Key? key}) : super(key: key);
 
     @override
     Widget build(BuildContext context) 
     {
+        
         return BlocBuilder<WordsBloc, WordsBlocState>(
             builder: (context, state) {
-                if (state is WordsLoading) 
+                if (state is WordsBlocStateLoading) 
                 {
                     return const Center(child: CircularProgressIndicator());
                 }
-                if (state is WordsLoaded) 
+                if (state is WordsBlocStateLoaded) 
                 {
                     return Scaffold(
                         body: WordsViewPageList(

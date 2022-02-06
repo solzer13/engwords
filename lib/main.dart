@@ -1,11 +1,11 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'cards/cards.dart';
 import 'file_data_provider.dart';
 import 'main/main.dart';
 import 'settings/settings.dart';
 import 'words/words.dart';
+import 'cards/cards.dart';
 
 
 void main() 
@@ -27,7 +27,7 @@ void main()
                         create:(BuildContext context) => WordsBloc(
                             provider: FileDataProvider("words.txt"), 
                             settingsBloc: context.read<SettingsBloc>()
-                        )..add(const WordsStarted()),
+                        )..add(const WordsBlocEventStarted()),
                         lazy: false,
                     ),
                     BlocProvider(
@@ -54,7 +54,7 @@ class SimpleBlocObserver extends BlocObserver
 
     @override
     void onError(BlocBase bloc, Object error, StackTrace stackTrace) {
-        log('${bloc.runtimeType} $error');
+        log('ERROR: ${bloc.runtimeType} $error');
         super.onError(bloc, error, stackTrace);
     }
 

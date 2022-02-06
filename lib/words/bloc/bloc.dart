@@ -15,25 +15,26 @@ class WordsBloc extends Bloc<WordsBlocEvent, WordsBlocState> {
 
     final List<WordsModel> words = [];
 
-
-    WordsBloc({required this.provider, required this.settingsBloc}) : super(const WordsInitial()) {
-        on<WordsStarted>(_onStarted);
-        on<SettingsLoadedState>(_onSettingsLoadedState);
-        on<WordsCheckboxChange>(_onCheckboxChange);
-        on<WordsAddItem>(_onAddItem);
-        on<WordsEditItem>(_onEditItem);
-        on<WordsDeleteItem>(_onDeleteItem);
+    WordsBloc({required this.provider, required this.settingsBloc}) : super(const WordsBlocStateInitial()) {
+        on<WordsBlocEventStarted>(_onStarted);
+        on<WordsBlocEventSettingsLoaded>(_onSettingsLoadedState);
+        on<WordsBlocEventCheckboxChange>(_onCheckboxChange);
+        on<WordsBlocEventSortAbc>(_onSortAbc);
+        on<WordsBlocEventSortRepeat>(_onSortRepeat);
+        on<WordsBlocEventChangeLearned>(_onChangeLearned);
+        on<WordsBlocEventAddItem>(_onAddItem);
+        on<WordsBlocEventDelete>(_onDelete);
     }
     
-    void _onStarted(WordsStarted event, Emitter<WordsBlocState> emit) async 
+    FutureOr<void> _onStarted(WordsBlocEventStarted event, Emitter<WordsBlocState> emit) async 
     {
-        emit(const WordsLoading());
+        emit(const WordsBlocStateLoading());
 
         try
         {
             settingsBloc.stream.listen((state) async { 
                 if(state is SettingsLoaded){
-                    add(SettingsLoadedState(stateSettingsLoaded: state));
+                    add(WordsBlocEventSettingsLoaded(stateSettingsLoaded: state));
                 }
             });
         }
@@ -43,7 +44,7 @@ class WordsBloc extends Bloc<WordsBlocEvent, WordsBlocState> {
         }
     }
 
-    void _onSettingsLoadedState(SettingsLoadedState event, Emitter<WordsBlocState> emit) async 
+    FutureOr<void> _onSettingsLoadedState(WordsBlocEventSettingsLoaded event, Emitter<WordsBlocState> emit) async 
     {
         try
         {
@@ -52,7 +53,7 @@ class WordsBloc extends Bloc<WordsBlocEvent, WordsBlocState> {
             for (var wordMap in data["words"]??[]) {
                 words.add(WordsModel.fromMap(wordMap));
             }
-            emit(WordsLoaded(words: words));
+            emit(WordsBlocStateLoaded(words: words));
         }
         catch(e)
         {
@@ -60,41 +61,71 @@ class WordsBloc extends Bloc<WordsBlocEvent, WordsBlocState> {
         }
     }
 
-    FutureOr<void> _onCheckboxChange(WordsCheckboxChange event, Emitter<WordsBlocState> emit) 
+    FutureOr<void> _onCheckboxChange(WordsBlocEventCheckboxChange event, Emitter<WordsBlocState> emit) 
     {
-        event.word.checkbox = event.checked;
-        emit(WordsLoaded(words: words));
+        event.word.checked = event.checked;
+        emit(WordsBlocStateLoaded(words: words));
     }
 
-    void _onAddItem(WordsAddItem event, Emitter<WordsBlocState> emit) async 
+    FutureOr<void> _onSortAbc(WordsBlocEventSortAbc event, Emitter<WordsBlocState> emit) 
+    {
+        words.sort((a, b) {
+            return a.eng.compareTo(b.eng);
+        });
+        emit(WordsBlocStateLoaded(words: words));
+    }
+
+    FutureOr<void> _onSortRepeat(WordsBlocEventSortRepeat event, Emitter<WordsBlocState> emit) 
+    {
+        words.sort((a, b) {
+            return a.repeat.compareTo(b.repeat);
+        });
+        emit(WordsBlocStateLoaded(words: words));
+    }
+
+    FutureOr<void> _onChangeLearned(WordsBlocEventChangeLearned event, Emitter<WordsBlocState> emit) 
+    {
+        for (var word in words) {
+            if(word.checked)
+            {
+                word.repeat = event.learned ? settingsBloc.settings.countRepeatWord : 0;
+                word.checked = false;
+            }
+        }
+        emit(WordsBlocStateLoaded(words: words));
+    }
+    
+    FutureOr<void> _onAddItem(WordsBlocEventAddItem event, Emitter<WordsBlocState> emit) async 
     {
         try
         {
             words.add(event.word);
             await provider.writeAllData(toMap());
-            emit(WordsLoaded(words: words));
+            emit(WordsBlocStateLoaded(words: words));
         }
-        catch(e)
+        catch(exception)
         {
-            addError(e, StackTrace.current);
+            addError(exception, StackTrace.current);
         }
     }
 
-    FutureOr<void> _onEditItem(WordsEditItem event, Emitter<WordsBlocState> emit) async
+    FutureOr<void> _onDelete(WordsBlocEventDelete event, Emitter<WordsBlocState> emit) async 
     {
-        await provider.writeAllData(toMap());
-        emit(WordsLoaded(
-            words: words,
-        ));
-    }
-
-    void _onDeleteItem(WordsDeleteItem event, Emitter<WordsBlocState> emit) async 
-    {
-        words.remove(event.word);
-        await provider.writeAllData(toMap());
-        emit(WordsLoaded(
-            words: words,
-        ));
+        try
+        {
+            for (var word in words.toList()) {
+                if(word.checked)
+                {
+                    words.remove(word);
+                }
+            }
+            await provider.writeAllData(toMap());
+            emit(WordsBlocStateLoaded(words: words));
+        }
+        catch(exception)
+        {
+            addError(exception, StackTrace.current);
+        }
     }
 
     Map<String,dynamic> toMap()
@@ -107,5 +138,4 @@ class WordsBloc extends Bloc<WordsBlocEvent, WordsBlocState> {
 
         return map;
     }
-
 }

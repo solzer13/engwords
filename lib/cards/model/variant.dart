@@ -4,7 +4,7 @@ import 'package:engwords/words/words.dart';
 
 class CardsModelVariant extends WordsModel
 {
-    bool? checked;
+    bool? verified;
 
     CardsModelVariant(WordsModel word) :super.fromMap(word.toMap());
 }

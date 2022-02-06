@@ -23,13 +23,13 @@ class CardsViewPageListVariants extends StatelessWidget
     {
         var bgColor = MaterialStateProperty.all<Color>(Colors.grey);
 
-        if(card.variants[index].checked != null)
+        if(card.variants[index].verified != null)
         {
-            bgColor = card.variants[index].checked! ? 
+            bgColor = card.variants[index].verified! ? 
                 MaterialStateProperty.all<Color>(Colors.green):
                 MaterialStateProperty.all<Color>(Colors.red);
         
-            if(card.variants[index].checked!)
+            if(card.variants[index].verified!)
             {
                 Future.delayed(
                     const Duration(milliseconds: 500), 

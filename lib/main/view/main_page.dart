@@ -31,9 +31,7 @@ class MainWidget extends StatelessWidget
                     if (state is MainLoaded) 
                     {
                         return Scaffold(
-                            appBar: MainAppBarWidget(
-                                title: pages[state.index].title
-                            ),
+                            appBar: MainAppBarWidget(page: pages[state.index]),
                             body: pages[state.index] as Widget,
                             bottomNavigationBar: MainBottomNawigationWidget(
                                 selectedIndex: state.index, 

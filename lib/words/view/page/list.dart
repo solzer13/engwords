@@ -30,8 +30,8 @@ class WordsViewPageList extends StatelessWidget
             visualDensity: VisualDensity.compact,
             leading: Text(words[index].repeat.toString() + '/' + context.read<SettingsBloc>().settings.countRepeatWord.toString()),
             trailing: Checkbox(
-                value: words[index].checkbox, 
-                onChanged: (value) => context.read<WordsBloc>().add(WordsCheckboxChange(
+                value: words[index].checked, 
+                onChanged: (value) => context.read<WordsBloc>().add(WordsBlocEventCheckboxChange(
                     word: words[index], 
                     checked: value ?? false,
                 ))),

@@ -4,19 +4,19 @@ abstract class WordsBlocState {
     const WordsBlocState();
 }
 
-class WordsInitial extends WordsBlocState {
-    const WordsInitial();
+class WordsBlocStateInitial extends WordsBlocState {
+    const WordsBlocStateInitial();
 }
 
-class WordsLoading extends WordsBlocState {
-    const WordsLoading();
+class WordsBlocStateLoading extends WordsBlocState {
+    const WordsBlocStateLoading();
 }
 
-class WordsLoaded extends WordsBlocState {
+class WordsBlocStateLoaded extends WordsBlocState {
     final List<WordsModel> words;
-    const WordsLoaded({required this.words});
+    const WordsBlocStateLoaded({required this.words});
 }
 
-class WordsError extends WordsBlocState {
-    const WordsError();
+class WordsBlocStateError extends WordsBlocState {
+    const WordsBlocStateError();
 }

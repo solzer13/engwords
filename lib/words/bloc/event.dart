@@ -4,35 +4,39 @@ abstract class WordsBlocEvent {
     const WordsBlocEvent();
 }
 
-class WordsStarted extends WordsBlocEvent{
-    const WordsStarted();
+class WordsBlocEventStarted extends WordsBlocEvent{
+    const WordsBlocEventStarted();
 }
 
-class SettingsLoadedState extends WordsBlocEvent{
+class WordsBlocEventSettingsLoaded extends WordsBlocEvent{
     final SettingsLoaded stateSettingsLoaded;
-    const SettingsLoadedState({required this.stateSettingsLoaded});
+    const WordsBlocEventSettingsLoaded({required this.stateSettingsLoaded});
 }
 
-class WordsCheckboxChange extends WordsBlocEvent
-{
+class WordsBlocEventSortAbc extends WordsBlocEvent{
+    const WordsBlocEventSortAbc();
+}
+
+class WordsBlocEventSortRepeat extends WordsBlocEvent{
+    const WordsBlocEventSortRepeat();
+}
+
+class WordsBlocEventChangeLearned extends WordsBlocEvent{
+    final bool learned;
+    const WordsBlocEventChangeLearned({required this.learned});
+}
+
+class WordsBlocEventCheckboxChange extends WordsBlocEvent{
     final WordsModel word;
     final bool checked;
-    const WordsCheckboxChange({required this.word, required this.checked});
+    const WordsBlocEventCheckboxChange({required this.word, required this.checked});
 }
 
-class WordsDeleteItem extends WordsBlocEvent
-{
-    final WordsModel word;
-    const WordsDeleteItem(this.word);
+class WordsBlocEventDelete extends WordsBlocEvent{
+    const WordsBlocEventDelete();
 }
 
-class WordsEditItem extends WordsBlocEvent
-{
+class WordsBlocEventAddItem extends WordsBlocEvent{
     final WordsModel word;
-    const WordsEditItem(this.word);
-}
-
-class WordsAddItem extends WordsBlocEvent{
-    final WordsModel word;
-    const WordsAddItem(this.word);
+    const WordsBlocEventAddItem(this.word);
 }

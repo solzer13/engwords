@@ -3,9 +3,9 @@ part of 'main_page.dart';
 
 class MainAppBarWidget extends StatelessWidget implements PreferredSizeWidget
 {
-    const MainAppBarWidget({Key? key, required this.title}) : super(key: key);
+    final ViewPageInterface page;
 
-    final String title;
+    const MainAppBarWidget({Key? key, required this.page}) : super(key: key);
 
     @override
     Size get preferredSize => const Size.fromHeight(60);
@@ -15,8 +15,8 @@ class MainAppBarWidget extends StatelessWidget implements PreferredSizeWidget
     {
         return AppBar(
             centerTitle: false,
-            title: Text(title),
-            actions: [],
+            title: Text(page.title),
+            actions: page.actions,
         );
         
     }
