@@ -10,6 +10,7 @@ class PopMenuButtonSort extends StatelessWidget
     {
         return PopupMenuButton(
             icon: const Icon(Icons.sort),
+            tooltip: "Сортировка",
             itemBuilder: _items,
         );
     }
@@ -38,6 +39,7 @@ class PopMenuButtonMore extends StatelessWidget
     {
         return PopupMenuButton(
             icon: const Icon(Icons.more_vert_outlined),
+            tooltip: "Действия",
             itemBuilder: _items,
         );
     }

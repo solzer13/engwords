@@ -25,14 +25,14 @@ class SettingsViewPageList extends StatelessWidget
             children: [
                 Container(height: 10,),
                 const Text("Колличество повторений для слова",
-                    style: TextStyle(fontSize: 20)
+                    style: TextStyle(fontSize: 18)
                 ),
                 Slider(
                     value: settings.countRepeatWord.toDouble(),
                     min: 1,
                     max: 10,
                     divisions: 9,
-                    label: settings.countRepeatWord.round().toString(),
+                    label: settings.countRepeatWord.toString(),
                     onChanged: (double value) {
                         settings.countRepeatWord = value.toInt();
                         settingsBloc.add(const SettingsChange());
@@ -48,7 +48,7 @@ class SettingsViewPageList extends StatelessWidget
             children: [
                 Container(height: 10,),
                 const Text("Колличество вариантов на странице",
-                    style: TextStyle(fontSize: 20)
+                    style: TextStyle(fontSize: 18)
                 ),
                 Slider(
                     value: settings.counVariants.toDouble(),
@@ -69,9 +69,9 @@ class SettingsViewPageList extends StatelessWidget
     Widget countWordsLern(){
         return Column(
             children: [
-                Container(height: 10,),
+                Container(height: 10),
                 const Text("Колличество изучаемых слов",
-                    style: TextStyle(fontSize: 20)
+                    style: TextStyle(fontSize: 18)
                 ),
                 Slider(
                     value: settings.countWordsLearn.toDouble(),

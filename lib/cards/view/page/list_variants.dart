@@ -21,7 +21,7 @@ class CardsViewPageListVariants extends StatelessWidget
 
     Widget _buttonVariant(BuildContext context, int index)
     {
-        var bgColor = MaterialStateProperty.all<Color>(Colors.grey);
+        var bgColor = MaterialStateProperty.all<Color>(Colors.grey.shade400);
 
         if(card.variants[index].verified != null)
         {

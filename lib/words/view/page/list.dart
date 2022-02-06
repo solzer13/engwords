@@ -24,22 +24,79 @@ class WordsViewPageList extends StatelessWidget
 
     Widget _itemWord(BuildContext context, int index)
     {
-        return ListTile(
-            title: Text(words[index].eng),
-            subtitle: Text(words[index].rus),
-            visualDensity: VisualDensity.compact,
-            leading: Text(words[index].repeat.toString() + '/' + context.read<SettingsBloc>().settings.countRepeatWord.toString()),
-            trailing: Checkbox(
-                value: words[index].checked, 
-                onChanged: (value) => context.read<WordsBloc>().add(WordsBlocEventCheckboxChange(
-                    word: words[index], 
-                    checked: value ?? false,
-                ))),
-            // trailing: IconButton(
-            //     icon: const Icon(Icons.delete),
-            //     iconSize: 24.0,
-            //     onPressed: () { context.read<WordsBloc>().add(WordsDeleteItem(words[index])); },
-            // ),
+        Color bgCheckedColor = words[index].checked ? Colors.grey.shade200 : Colors.white;
+
+        return Container(
+            color: bgCheckedColor, 
+            height: 50, 
+            child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                    Padding(
+                        padding: const EdgeInsets.only(left:10, right: 20), 
+                        child: WordsViewPageListProgress(size: 30, word: words[index])
+                    ),
+                    Expanded(
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                                Text(words[index].eng, style: const TextStyle(fontSize: 16)),
+                                Text(words[index].rus, style: const TextStyle(fontSize: 13, color: Colors.grey))
+                            ],
+                        )
+                    ),
+                    Checkbox(
+                        value: words[index].checked, 
+                        onChanged: (value) => context.read<WordsBloc>().add(WordsBlocEventCheckboxChange(
+                            word: words[index], 
+                            checked: value ?? false,
+                        ))
+                    )
+                ],
+            )
+        );
+
+    }
+}
+
+class WordsViewPageListProgress extends StatelessWidget
+{
+    final double size;
+    final WordsModel word;
+
+    const WordsViewPageListProgress({Key? key, required this.size, required this.word}) : super(key: key);
+
+    @override
+    Widget build(BuildContext context) 
+    {
+        double progress = word.repeat / context.read<SettingsBloc>().settings.countRepeatWord.toDouble();
+
+        return SizedBox(
+            height: size,
+            width: size,
+            child: Stack(
+                children: <Widget>[
+                    Center(
+                        child: SizedBox(
+                            width: size,
+                            height: size,
+                            child: CircularProgressIndicator(
+                                backgroundColor: Colors.grey.shade200,
+                                strokeWidth: 4,
+                                value: progress,
+                            ),
+                        ),
+                    ),
+                    Center(
+                        child: Text(word.repeat.toString() + "/" + context.read<SettingsBloc>().settings.countRepeatWord.toString(), 
+                            textAlign: TextAlign.center, 
+                            style: const TextStyle(fontSize: 11)
+                        )
+                    ),
+                ],
+            ),
         );
     }
 }

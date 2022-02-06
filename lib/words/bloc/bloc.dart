@@ -28,10 +28,9 @@ class WordsBloc extends Bloc<WordsBlocEvent, WordsBlocState> {
     
     FutureOr<void> _onStarted(WordsBlocEventStarted event, Emitter<WordsBlocState> emit) async 
     {
-        emit(const WordsBlocStateLoading());
-
         try
         {
+            emit(const WordsBlocStateLoading());
             settingsBloc.stream.listen((state) async { 
                 if(state is SettingsLoaded){
                     add(WordsBlocEventSettingsLoaded(stateSettingsLoaded: state));
@@ -63,36 +62,65 @@ class WordsBloc extends Bloc<WordsBlocEvent, WordsBlocState> {
 
     FutureOr<void> _onCheckboxChange(WordsBlocEventCheckboxChange event, Emitter<WordsBlocState> emit) 
     {
-        event.word.checked = event.checked;
-        emit(WordsBlocStateLoaded(words: words));
+        try
+        {
+            event.word.checked = event.checked;
+            emit(WordsBlocStateLoaded(words: words));
+        }
+        catch(e)
+        {
+            addError(e, StackTrace.current);
+        }
     }
 
     FutureOr<void> _onSortAbc(WordsBlocEventSortAbc event, Emitter<WordsBlocState> emit) 
     {
-        words.sort((a, b) {
-            return a.eng.compareTo(b.eng);
-        });
-        emit(WordsBlocStateLoaded(words: words));
+        try
+        {
+            words.sort((a, b) {
+                return a.eng.compareTo(b.eng);
+            });
+            emit(WordsBlocStateLoaded(words: words));
+        }
+        catch(e)
+        {
+            addError(e, StackTrace.current);
+        }
     }
 
     FutureOr<void> _onSortRepeat(WordsBlocEventSortRepeat event, Emitter<WordsBlocState> emit) 
     {
-        words.sort((a, b) {
-            return a.repeat.compareTo(b.repeat);
-        });
-        emit(WordsBlocStateLoaded(words: words));
+        try
+        {
+            words.sort((a, b) {
+                return a.repeat.compareTo(b.repeat);
+            });
+            emit(WordsBlocStateLoaded(words: words));
+        }
+        catch(e)
+        {
+            addError(e, StackTrace.current);
+        }
     }
 
-    FutureOr<void> _onChangeLearned(WordsBlocEventChangeLearned event, Emitter<WordsBlocState> emit) 
+    FutureOr<void> _onChangeLearned(WordsBlocEventChangeLearned event, Emitter<WordsBlocState> emit) async
     {
-        for (var word in words) {
-            if(word.checked)
-            {
-                word.repeat = event.learned ? settingsBloc.settings.countRepeatWord : 0;
-                word.checked = false;
+        try
+        {
+            for (var word in words) {
+                if(word.checked)
+                {
+                    word.repeat = event.learned ? settingsBloc.settings.countRepeatWord : 0;
+                    word.checked = false;
+                }
             }
+            await provider.writeAllData(toMap());
+            emit(WordsBlocStateLoaded(words: words));
         }
-        emit(WordsBlocStateLoaded(words: words));
+        catch(exception)
+        {
+            addError(exception, StackTrace.current);
+        }
     }
     
     FutureOr<void> _onAddItem(WordsBlocEventAddItem event, Emitter<WordsBlocState> emit) async 
