@@ -1,31 +1,34 @@
 
-import 'package:engwords/page_interface.dart';
-import 'package:engwords/settings/bloc/settings_bloc.dart';
+import 'package:engwords/interface_view_page.dart';
+import 'package:engwords/settings/bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:engwords/cards/cards.dart';
 
-part 'cards_page_bar.dart';
-part 'cards_page_word.dart';
-part 'cards_page_list_variants.dart';
+part 'bar.dart';
+part 'word.dart';
+part 'list_variants.dart';
 
-class CardsWidget extends StatelessWidget implements WidgetPage
+class CardsViewPage extends StatelessWidget implements ViewPageInterface
 {
-    const CardsWidget({Key? key}) : super(key: key);
-
     @override
-    final String title = "Cards";
+    String get title => "Cards";
  
     @override
-    final button = const BottomNavigationBarItem(
+    BottomNavigationBarItem get button => const BottomNavigationBarItem(
         icon: Icon(Icons.settings),
         label: 'Cards',
     );
 
     @override
+    List<IconButton> get actions => [];
+
+    const CardsViewPage({Key? key}) : super(key: key);
+
+    @override
     Widget build(BuildContext context) 
     {
-        return BlocBuilder<CardsBloc, CardsState>(
+        return BlocBuilder<CardsBloc, CardsBlocState>(
             builder: (context, state) {
                 if (state is CardsLoading) 
                 {
@@ -40,9 +43,9 @@ class CardsWidget extends StatelessWidget implements WidgetPage
                     return 
                     Column(
                         children: [
-                            CardsPageBarWidget(card: state.card,),
-                            CardsPageWordWidget(card: state.card),
-                            CardsPageListVariantsWidget(card: state.card),
+                            CardsViewPageBar(card: state.card,),
+                            CardsViewPageWord(card: state.card),
+                            CardsViewPageListVariants(card: state.card),
                         ],
                     );
                 }

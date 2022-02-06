@@ -4,7 +4,7 @@ part of 'main_page.dart';
 class MainBottomNawigationWidget extends StatelessWidget
 {
     final int selectedIndex;
-    final List<WidgetPage> pages;
+    final List<ViewPageInterface> pages;
 
     const MainBottomNawigationWidget({Key? key, required this.selectedIndex, required this.pages}) : super(key: key);
 

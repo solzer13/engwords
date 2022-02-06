@@ -1,27 +1,28 @@
 
-
 import 'package:engwords/cards/cards.dart';
 import 'package:engwords/words/words.dart';
 
-class CardModel
+export 'variant.dart';
+
+class CardsModel
 {
-    final List<Word> learnWords;
+    final List<WordsModel> learnWords;
     final int counVariants;
 
-    Word word = Word();
-    List<VariantModel> variants = [];
+    WordsModel word = WordsModel();
+    List<CardsModelVariant> variants = [];
 
-    CardModel({required this.learnWords, required this.counVariants})
+    CardsModel({required this.learnWords, required this.counVariants})
     {
         word = (learnWords..shuffle()).first;
 
-        variants.add(VariantModel(word));
+        variants.add(CardsModelVariant(word));
 
         for (var learnWord in learnWords) 
         { 
             if(learnWord != word)
             {
-                variants.add(VariantModel(learnWord));
+                variants.add(CardsModelVariant(learnWord));
                 if(variants.length == counVariants) break;
             }
         }
@@ -29,7 +30,7 @@ class CardModel
         variants.shuffle();
     }
 
-    void checkVariant(VariantModel variant)
+    void checkVariant(CardsModelVariant variant)
     {
         variant.checked = variant.eng == word.eng;
     }

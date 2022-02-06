@@ -1,6 +1,6 @@
 
 
-import 'package:engwords/page_interface.dart';
+import 'package:engwords/interface_view_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:engwords/main/main.dart';
@@ -15,7 +15,7 @@ class MainWidget extends StatelessWidget
 {
     MainWidget({Key? key}) : super(key: key);
 
-    final List<WidgetPage> pages = [const WordsWidget(), const CardsWidget(), const SettingsWidget()];
+    final List<ViewPageInterface> pages = [const WordsViewPage(), const CardsViewPage(), const SettingsViewPage()];
 
     @override
     Widget build(BuildContext context) 

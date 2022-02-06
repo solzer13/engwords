@@ -16,6 +16,7 @@ class MainAppBarWidget extends StatelessWidget implements PreferredSizeWidget
         return AppBar(
             centerTitle: false,
             title: Text(title),
+            actions: [],
         );
         
     }

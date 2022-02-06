@@ -1,11 +1,11 @@
 
-part of 'cards_page.dart';
+part of 'page.dart';
 
-class CardsPageListVariantsWidget extends StatelessWidget
+class CardsViewPageListVariants extends StatelessWidget
 {
-    final CardModel card;
+    final CardsModel card;
 
-    const CardsPageListVariantsWidget({Key? key, required this.card}) : super(key: key);
+    const CardsViewPageListVariants({Key? key, required this.card}) : super(key: key);
 
     @override
     Widget build(BuildContext context) 

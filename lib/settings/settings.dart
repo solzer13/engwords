@@ -1,3 +1,3 @@
-export 'bloc/settings_bloc.dart';
-export 'view/settings_page.dart';
-export 'models/settings.dart';
+export 'bloc/bloc.dart';
+export 'view/page/page.dart';
+export 'model/model.dart';

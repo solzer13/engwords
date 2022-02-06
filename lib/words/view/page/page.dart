@@ -1,30 +1,33 @@
 
-import 'package:engwords/page_interface.dart';
+import 'package:engwords/interface_view_page.dart';
 import 'package:engwords/settings/settings.dart';
 import 'package:engwords/words/words.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-part 'words_page_list.dart';
-part 'words_add_dialog.dart';
+part 'list.dart';
+part 'add_dialog.dart';
 
-class WordsWidget extends StatelessWidget implements WidgetPage
+class WordsViewPage extends StatelessWidget implements ViewPageInterface
 {
     @override
-    final title = "Words";
+    String get title => "Words";
 
     @override
-    final button = const BottomNavigationBarItem(
+    BottomNavigationBarItem get button => const BottomNavigationBarItem(
         icon: Icon(Icons.settings),
         label: 'Words',
     );
 
-    const WordsWidget({Key? key}) : super(key: key);
+    @override
+    List<IconButton> get actions => [];
+
+    const WordsViewPage({Key? key}) : super(key: key);
 
     @override
     Widget build(BuildContext context) 
     {
-        return BlocBuilder<WordsBloc, WordsState>(
+        return BlocBuilder<WordsBloc, WordsBlocState>(
             builder: (context, state) {
                 if (state is WordsLoading) 
                 {
@@ -33,7 +36,7 @@ class WordsWidget extends StatelessWidget implements WidgetPage
                 if (state is WordsLoaded) 
                 {
                     return Scaffold(
-                        body: WordsPageListWidget(
+                        body: WordsViewPageList(
                             words: state.words,
                         ),
                         floatingActionButton: _floatingButton(context),
@@ -51,7 +54,7 @@ class WordsWidget extends StatelessWidget implements WidgetPage
                 showDialog<void>(
                     context: context,
                     barrierDismissible: false,
-                    builder: (BuildContext context) => const WordsAddDialogWidget()
+                    builder: (BuildContext context) => const WordsViewPageAddDialog()
                 );
             },
             child: const Icon(Icons.add),

@@ -1,15 +1,15 @@
 import 'package:bloc/bloc.dart';
-import 'package:engwords/data_provider.dart';
+import 'package:engwords/interface_data_provider.dart';
 import 'package:engwords/settings/settings.dart';
 
-part 'settings_event.dart';
-part 'settings_state.dart';
+part 'event.dart';
+part 'state.dart';
 
-class SettingsBloc extends Bloc<SettingsEvent, SettingsState> 
+class SettingsBloc extends Bloc<SettingsBlocEvent, SettingsBlocState> 
 {
-    final DataProvider provider;
+    final DataProviderInterface provider;
 
-    Settings settings = Settings.fromMap({});
+    SettingsModel settings = SettingsModel.fromMap({});
 
     SettingsBloc({required this.provider}) : super(const SettingsInitial()) 
     {
@@ -18,19 +18,19 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState>
         on<SettingsChangeEnd>(_onChangeEnd);
     }
     
-    void _onStarted(SettingsStarted event, Emitter<SettingsState> emit) async 
+    void _onStarted(SettingsStarted event, Emitter<SettingsBlocState> emit) async 
     {
         emit(const SettingsLoading());
-        settings = Settings.fromMap(await provider.getAllData());
+        settings = SettingsModel.fromMap(await provider.getAllData());
         emit(SettingsLoaded(settings: settings));
     }
     
-    void _onChange(SettingsChange event, Emitter<SettingsState> emit) async 
+    void _onChange(SettingsChange event, Emitter<SettingsBlocState> emit) async 
     {
         emit(SettingsLoaded(settings: settings));
     }
 
-    void _onChangeEnd(SettingsChangeEnd event, Emitter<SettingsState> emit) async 
+    void _onChangeEnd(SettingsChangeEnd event, Emitter<SettingsBlocState> emit) async 
     {
         await provider.writeAllData(settings.toMap());
         emit(SettingsLoaded(settings: settings));

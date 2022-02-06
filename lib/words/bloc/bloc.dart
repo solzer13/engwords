@@ -1,19 +1,19 @@
 
 import 'dart:async';
 import 'package:bloc/bloc.dart';
-import 'package:engwords/data_provider.dart';
+import 'package:engwords/interface_data_provider.dart';
 import 'package:engwords/words/words.dart';
 import 'package:engwords/settings/settings.dart';
 
-part 'words_event.dart';
-part 'words_state.dart';
+part 'event.dart';
+part 'state.dart';
 
-class WordsBloc extends Bloc<WordsEvent, WordsState> {
+class WordsBloc extends Bloc<WordsBlocEvent, WordsBlocState> {
 
-    final DataProvider provider;
+    final DataProviderInterface provider;
     final SettingsBloc settingsBloc;
 
-    final List<Word> words = [];
+    final List<WordsModel> words = [];
 
 
     WordsBloc({required this.provider, required this.settingsBloc}) : super(const WordsInitial()) {
@@ -25,7 +25,7 @@ class WordsBloc extends Bloc<WordsEvent, WordsState> {
         on<WordsDeleteItem>(_onDeleteItem);
     }
     
-    void _onStarted(WordsStarted event, Emitter<WordsState> emit) async 
+    void _onStarted(WordsStarted event, Emitter<WordsBlocState> emit) async 
     {
         emit(const WordsLoading());
 
@@ -43,14 +43,14 @@ class WordsBloc extends Bloc<WordsEvent, WordsState> {
         }
     }
 
-    void _onSettingsLoadedState(SettingsLoadedState event, Emitter<WordsState> emit) async 
+    void _onSettingsLoadedState(SettingsLoadedState event, Emitter<WordsBlocState> emit) async 
     {
         try
         {
             words.clear();
             var data = await provider.getAllData();
             for (var wordMap in data["words"]??[]) {
-                words.add(Word.fromMap(wordMap));
+                words.add(WordsModel.fromMap(wordMap));
             }
             emit(WordsLoaded(words: words));
         }
@@ -60,13 +60,13 @@ class WordsBloc extends Bloc<WordsEvent, WordsState> {
         }
     }
 
-    FutureOr<void> _onCheckboxChange(WordsCheckboxChange event, Emitter<WordsState> emit) 
+    FutureOr<void> _onCheckboxChange(WordsCheckboxChange event, Emitter<WordsBlocState> emit) 
     {
         event.word.checkbox = event.checked;
         emit(WordsLoaded(words: words));
     }
 
-    void _onAddItem(WordsAddItem event, Emitter<WordsState> emit) async 
+    void _onAddItem(WordsAddItem event, Emitter<WordsBlocState> emit) async 
     {
         try
         {
@@ -80,7 +80,7 @@ class WordsBloc extends Bloc<WordsEvent, WordsState> {
         }
     }
 
-    FutureOr<void> _onEditItem(WordsEditItem event, Emitter<WordsState> emit) async
+    FutureOr<void> _onEditItem(WordsEditItem event, Emitter<WordsBlocState> emit) async
     {
         await provider.writeAllData(toMap());
         emit(WordsLoaded(
@@ -88,7 +88,7 @@ class WordsBloc extends Bloc<WordsEvent, WordsState> {
         ));
     }
 
-    void _onDeleteItem(WordsDeleteItem event, Emitter<WordsState> emit) async 
+    void _onDeleteItem(WordsDeleteItem event, Emitter<WordsBlocState> emit) async 
     {
         words.remove(event.word);
         await provider.writeAllData(toMap());

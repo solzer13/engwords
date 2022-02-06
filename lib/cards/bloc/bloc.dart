@@ -6,15 +6,15 @@ import 'package:engwords/cards/cards.dart';
 import 'package:engwords/settings/settings.dart';
 import 'package:engwords/words/words.dart';
 
-part 'cards_event.dart';
-part 'cards_state.dart';
+part 'event.dart';
+part 'state.dart';
 
-class CardsBloc extends Bloc<CardsEvent, CardsState> 
+class CardsBloc extends Bloc<CardsBlocEvent, CardsBlocState> 
 {
     SettingsBloc settingsBloc;
     WordsBloc wordsBloc;
     
-    late CardModel card = CardModel(learnWords: [], counVariants: 0);
+    late CardsModel card = CardsModel(learnWords: [], counVariants: 0);
 
     CardsBloc({required this.settingsBloc, required this.wordsBloc}) : super(const CardsInitial())
     {
@@ -24,7 +24,7 @@ class CardsBloc extends Bloc<CardsEvent, CardsState>
         on<CardsNextCard>(_onCardsNextCard);
     }
     
-    Future<void> _onStarted(CardsStarted event, Emitter<CardsState> emit) async
+    Future<void> _onStarted(CardsStarted event, Emitter<CardsBlocState> emit) async
     {
         emit(const CardsLoading());
 
@@ -42,13 +42,13 @@ class CardsBloc extends Bloc<CardsEvent, CardsState>
         }
     }
 
-    FutureOr<void> _onWordsLoadedState(WordsLoadedState event, Emitter<CardsState> emit) 
+    FutureOr<void> _onWordsLoadedState(WordsLoadedState event, Emitter<CardsBlocState> emit) 
     {
         try
         {
             if(_checkWords())
             {
-                card = CardModel(
+                card = CardsModel(
                     learnWords: _getLearnWords(), 
                     counVariants: settingsBloc.settings.counVariants,
                 );
@@ -66,7 +66,7 @@ class CardsBloc extends Bloc<CardsEvent, CardsState>
         }    
     }
 
-    FutureOr<void> _onCardsNextCard(CardsNextCard event, Emitter<CardsState> emit) 
+    FutureOr<void> _onCardsNextCard(CardsNextCard event, Emitter<CardsBlocState> emit) 
     {
         card.word.repeat++;
 
@@ -80,7 +80,7 @@ class CardsBloc extends Bloc<CardsEvent, CardsState>
         
         if(_checkWords())
         {
-            card = CardModel(
+            card = CardsModel(
                 learnWords: card.learnWords, 
                 counVariants: settingsBloc.settings.counVariants,
             );
@@ -93,7 +93,7 @@ class CardsBloc extends Bloc<CardsEvent, CardsState>
         }
     }
 
-    FutureOr<void> _onPressVariant(CardsPressVariant event, Emitter<CardsState> emit) async
+    FutureOr<void> _onPressVariant(CardsPressVariant event, Emitter<CardsBlocState> emit) async
     {
         card.checkVariant(event.variant);
         
@@ -113,9 +113,9 @@ class CardsBloc extends Bloc<CardsEvent, CardsState>
         return false;
     }
 
-    List<Word> _getLearnWords()
+    List<WordsModel> _getLearnWords()
     {
-        List<Word> _learnWords = [];
+        List<WordsModel> _learnWords = [];
 
         var _countWordsLern = settingsBloc.settings.countWordsLearn + 1;
 

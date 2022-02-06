@@ -1,5 +1,5 @@
 
-class Settings
+class SettingsModel
 {
     /// Колличество слов для изучения
     late int countWordsLearn;
@@ -10,7 +10,7 @@ class Settings
     /// Колличество повторений для слова
     late int countRepeatWord;
 
-    Settings.fromMap(Map<String, dynamic> settingsMap)
+    SettingsModel.fromMap(Map<String, dynamic> settingsMap)
     {
         countWordsLearn = settingsMap["countWordsLearn"] ?? 10;
         counVariants = settingsMap["counVariants"] ??  5;

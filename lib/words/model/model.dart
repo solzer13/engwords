@@ -1,7 +1,7 @@
 
 import 'dart:math';
 
-class Word
+class WordsModel
 {
     late String id;
     late String eng;
@@ -11,9 +11,9 @@ class Word
 
     bool checkbox = false;
 
-    Word() : this.fromMap({});
+    WordsModel() : this.fromMap({});
 
-    Word.fromMap(Map<String, dynamic> map)
+    WordsModel.fromMap(Map<String, dynamic> map)
     {
         id = map['id'] ?? _genUID();
         eng = map['eng'] ?? 'No eng';

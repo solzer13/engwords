@@ -1,14 +1,14 @@
 
-part of 'words_page.dart';
+part of 'page.dart';
 
-class WordsAddDialogWidget extends StatelessWidget
+class WordsViewPageAddDialog extends StatelessWidget
 {
-    const WordsAddDialogWidget({Key? key}) : super(key: key);
+    const WordsViewPageAddDialog({Key? key}) : super(key: key);
 
     @override
     Widget build(BuildContext context) 
     {
-        var word = Word();
+        var word = WordsModel();
 
         return SimpleDialog(
             title: const Text('Add word'),

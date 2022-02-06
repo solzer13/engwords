@@ -1,11 +1,11 @@
 
-part of 'words_page.dart';
+part of 'page.dart';
 
-class WordsPageListWidget extends StatelessWidget
+class WordsViewPageList extends StatelessWidget
 {
-    final List<Word> words;
+    final List<WordsModel> words;
 
-    const WordsPageListWidget({Key? key, required this.words}) : super(key: key);
+    const WordsViewPageList({Key? key, required this.words}) : super(key: key);
 
     @override
     Widget build(BuildContext context) 

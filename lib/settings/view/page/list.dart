@@ -1,15 +1,12 @@
 
-import 'package:engwords/page_interface.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:engwords/settings/settings.dart';
+part of 'page.dart';
 
-class SettingsWidgetList extends StatelessWidget 
+class SettingsViewPageList extends StatelessWidget 
 {
     final SettingsBloc settingsBloc;
-    final Settings settings;
+    final SettingsModel settings;
 
-    const SettingsWidgetList({Key? key, required this.settings, required this.settingsBloc}) : super(key: key);
+    const SettingsViewPageList({Key? key, required this.settings, required this.settingsBloc}) : super(key: key);
 
     @override
     Widget build(BuildContext context) 
@@ -90,41 +87,5 @@ class SettingsWidgetList extends StatelessWidget
                 ),
             ],
         );
-    }
-}
-
-class SettingsWidget extends StatelessWidget implements WidgetPage
-{
-    const SettingsWidget({Key? key}) : super(key: key);
-
-    @override
-    final String title = "Settings";
-
-    @override
-    final button = const BottomNavigationBarItem(
-        icon: Icon(Icons.settings),
-        label: 'Settings',
-    );
-
-    @override
-    Widget build(BuildContext context) 
-    {
-        return BlocBuilder<SettingsBloc, SettingsState>(
-            builder: (context, state) {
-                if (state is SettingsLoading) 
-                {
-                    return const Center(child: CircularProgressIndicator());
-                }
-                if (state is SettingsLoaded) 
-                {
-                    return SettingsWidgetList(
-                        settingsBloc: context.read<SettingsBloc>(),
-                        settings: state.settings,
-                    );
-                }
-                return const Center(child: Text('Something went wrong!'));
-            },
-        );
-
     }
 }

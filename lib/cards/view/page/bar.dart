@@ -1,12 +1,12 @@
 
-part of 'cards_page.dart';
+part of 'page.dart';
 
 
-class CardsPageBarWidget extends StatelessWidget
+class CardsViewPageBar extends StatelessWidget
 {
-    final CardModel card;
+    final CardsModel card;
 
-    const CardsPageBarWidget({Key? key, required this.card}) : super(key: key);
+    const CardsViewPageBar({Key? key, required this.card}) : super(key: key);
 
     @override
     Widget build(BuildContext context) 
