@@ -2,7 +2,7 @@
     package="com.example.engwords">
     
    <application
-        android:label="engwords"
+        android:label="EngWords"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
