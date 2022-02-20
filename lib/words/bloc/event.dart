@@ -41,7 +41,12 @@ class WordsBlocEventDelete extends WordsBlocEvent{
     const WordsBlocEventDelete();
 }
 
-class WordsBlocEventAddItem extends WordsBlocEvent{
+class WordsBlocEventEdit extends WordsBlocEvent{
     final WordsModel word;
-    const WordsBlocEventAddItem(this.word);
+    const WordsBlocEventEdit(this.word);
+}
+
+class WordsBlocEventAdd extends WordsBlocEvent{
+    final WordsModel word;
+    const WordsBlocEventAdd(this.word);
 }
