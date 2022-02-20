@@ -8,7 +8,7 @@ class MainAppBarWidget extends StatelessWidget implements PreferredSizeWidget
     const MainAppBarWidget({Key? key, required this.page}) : super(key: key);
 
     @override
-    Size get preferredSize => const Size.fromHeight(60);
+    Size get preferredSize => const Size.fromHeight(50);
 
     @override
     Widget build(BuildContext context) 
@@ -18,7 +18,6 @@ class MainAppBarWidget extends StatelessWidget implements PreferredSizeWidget
             title: Text(page.title),
             actions: page.actions,
         );
-        
     }
 
 }

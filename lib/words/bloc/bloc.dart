@@ -23,7 +23,8 @@ class WordsBloc extends Bloc<WordsBlocEvent, WordsBlocState> {
         on<WordsBlocEventSortAbc>(_onSortAbc);
         on<WordsBlocEventSortRepeat>(_onSortRepeat);
         on<WordsBlocEventChangeLearned>(_onChangeLearned);
-        on<WordsBlocEventAddItem>(_onAddItem);
+        on<WordsBlocEventAdd>(_onAdd);
+        on<WordsBlocEventEdit>(_onEdit);
         on<WordsBlocEventDelete>(_onDelete);
     }
     
@@ -139,11 +140,24 @@ class WordsBloc extends Bloc<WordsBlocEvent, WordsBlocState> {
         }
     }
     
-    FutureOr<void> _onAddItem(WordsBlocEventAddItem event, Emitter<WordsBlocState> emit) async 
+    FutureOr<void> _onAdd(WordsBlocEventAdd event, Emitter<WordsBlocState> emit) async 
     {
         try
         {
             words.add(event.word);
+            await provider.writeAllData(toMap());
+            emit(WordsBlocStateLoaded(words: words));
+        }
+        catch(exception)
+        {
+            addError(exception, StackTrace.current);
+        }
+    }
+
+    FutureOr<void> _onEdit(WordsBlocEventEdit event, Emitter<WordsBlocState> emit) async
+    {
+        try
+        {
             await provider.writeAllData(toMap());
             emit(WordsBlocStateLoaded(words: words));
         }
